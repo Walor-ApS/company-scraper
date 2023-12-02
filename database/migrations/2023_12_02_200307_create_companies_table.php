@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('municipality_id')->constrained()->nullOnDelete();
+            $table->foreignId('municipality_id')
+                ->nullable()
+                ->constrained('municipalities')
+                ->nullOnDelete();
 
             $table->string('country')->default('DK');
             $table->string('cvr');
@@ -28,8 +31,6 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->boolean('advertising_protected')->default(false);
-
-            $table->string('address');
 
             $table->timestamps();
         });
