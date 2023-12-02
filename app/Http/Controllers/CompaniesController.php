@@ -4,24 +4,22 @@ namespace App\Http\Controllers;
 
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\Panther\Client;
+use Symfony\Component\Panther\DomCrawler\Crawler;
 
 class CompaniesController extends Controller
 {
     public function index() {
-        $browser = new HttpBrowser(HttpClient::create());
-        $website = $browser->request('GET', 'https://datacvr.virk.dk/');
 
-        // $companies = $website->filter('.soegeresultaterTabel .row')->each(function ($node) {
-        //     echo "IN";
-        //     $company_name = $node->filter('div span')->text();
-            
-        //     return [
-        //         'company_name' => $company_name
-        //     ];
-        // });
-
-        // return $companies;
-
-        return $website->getResponse();
+        // * First version
+        $client = new HttpBrowser(HttpClient::create());
+        $crawler = $client->request('GET', 'https://datacvr.virk.dk/soegeresultater?sideIndex=0&enhedstype=virksomhed&antalAnsatte=ANTAL_20_49&virksomhedsstatus=aktiv%252Cnormal&size=10');            
+        
+        // * Second version with chrome client
+        // $client = Client::createChromeClient();    // create a chrome client
+        // $crawler = $client->request('GET', 'https://datacvr.virk.dk/soegeresultater?sideIndex=0&enhedstype=virksomhed&antalAnsatte=ANTAL_20_49&virksomhedsstatus=aktiv%252Cnormal&size=10');            
+        // $client->waitFor('div');
+        
+        return $crawler->html();
     }
 }
