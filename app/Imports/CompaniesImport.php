@@ -3,21 +3,17 @@
 namespace App\Imports;
 
 use App\Models\Company;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class CompanyImport implements ToModel
+class CompaniesImport implements ToModel
 {
     /**
-     * @param array $row
-     *
-     * @return User|null
-     */
-    public function model(array $row): Company | null
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function model(array $row)
     {
-        logger($row);
         if($row[1] === 'Startdato') {
             return null;
         }
@@ -26,15 +22,14 @@ class CompanyImport implements ToModel
             return null;
         }
 
-        if($row[1] === null) {
+        if($row[3] === null) {
             return null;
         }
 
-        if($row[2] === '') {
-            return null;
-        }
 
-        return new Company([
+
+        logger($row);
+        return Company::create([
             'municipality_id' => 55,
             'country' => 'DK',
             'cvr' => $row[0],
