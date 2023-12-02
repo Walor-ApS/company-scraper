@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Imports\CompanyImport;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CompanySeeder extends Seeder
 {
@@ -14,10 +15,6 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        $file = Storage::disk('public')->get('companies/cph.xlsx');
-
-        Excel::filter('chunk')->load($file)->chunk(100, function ($results) {
-            dd($results);
-        });
+        Excel::import(new CompanyImport, storage_path('app/public/companies/cph.xlsx'));
     }
 }
