@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('municipalities', function (Blueprint $table) {
+        Schema::create('company_employees', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedSmallInteger('code');
+            $table->unsignedBigInteger('company_id');
+
+            $table->integer('year');
+            $table->tinyInteger('month');
+            $table->integer('employees');
+            $table->timestamps();
         });
     }
 
@@ -22,7 +26,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('municipalities');
+    {            
+        Schema::dropIfExists('company_employees');
     }
 };

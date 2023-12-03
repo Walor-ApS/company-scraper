@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\CompanyEmployee;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -19,7 +19,8 @@ class CompaniesController extends Controller
         
         $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();        
         
-        for ($i = 1; $i <= $maxPages; $i++) {
+        //Handle pagination
+        for ($i = 1; $i <= 1; $i++) {
             $website = $browser->request('GET', "https://www.proff.dk/segmentering?mainUnit=true&numEmployeesFrom=20&numEmployeesTo=49&page=$i");
             $this->scrapeCompanies($website);
         }
@@ -44,7 +45,7 @@ class CompaniesController extends Controller
                 });
             });
 
-            Company::updateOrCreate([
+            $this->company = Company::updateOrCreate([
                 'name' => $this->company->name,
                 'cvr' => $this->company->cvr,
                 'founded_at' => $this->company->founded_at,
@@ -53,6 +54,7 @@ class CompaniesController extends Controller
                 'company_type' => $this->company->company_type,
                 'phone' => $this->company->name,
             ]);
+            $this->storeEmployeeHistory($this->company->cvr);
         });        
    }
 
@@ -61,7 +63,6 @@ class CompaniesController extends Controller
         $fieldValue = $node->filter('.OfficialCompanyInformationCard-propertyValue')->text();                
         
         if ($fieldName == "Juridisk navn") {
-            // echo $fieldValue;
             $this->company->name = $fieldValue;
         }  
         elseif ($fieldName == "CVR-nr") {
@@ -82,5 +83,32 @@ class CompaniesController extends Controller
         elseif ($fieldName == "Antal ansatte") {
             $this->company->employees = $fieldValue;
         }  
+   }
+
+   //Store employee history for company
+   public function storeEmployeeHistory($cvr) {
+        $response = Http::withHeaders([
+            'Authorization' => 'cvr.dev_d1932811ecc4d5906d28c44d3a3fbdfb'
+            ])->get("https://api.cvr.dev/api/cvr/virksomhed?cvr_nummer=$cvr");
+
+        $jsonData = $response->json();
+
+        if (! $jsonData) {
+            return;
+        }
+
+        foreach ($jsonData[0]['maanedsbeskaeftigelse'] as $employeeHistory) {
+            CompanyEmployee::updateOrCreate([
+                'year' => $employeeHistory['aar'],
+                'month' => $employeeHistory['maaned'],
+                'employees' => $employeeHistory['antalAnsatte'],
+                'company_id' => $this->company->id
+            ]);
+        }
+   }
+
+   //Fetch employee history for company
+   public function fetchEmployeeHistoryForCompany(Company $company) {
+        return $company->employeeHistory()->get();
    }
 }
