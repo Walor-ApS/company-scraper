@@ -51,17 +51,22 @@ class CompaniesController extends Controller
             $thisMonthEmployees = $monthlyEmployeeHistory[$length]['antalAnsatte'];
 
             if ($thisMonthEmployees > $employee_number && $lastMonthEmployees < $employee_number) {
+                $company_phone_check = $company->phone == null ? "Unknown" : $company->phone;
+                $company_email_check = $company->email == null ? "Unknown" : $company->email;
+                $link = "https://www.proff.dk$company->link";
+
                 SlackChannel::SlackNotify("
-                🎉NEW POTENTIAL CLIENT🎉 \n
+                🎉 NEW POTENTIAL CLIENT 🎉 \n
                 - Name: $company->name\n
                 - CVR: $company->cvr\n
                 - Employees: $company->employees\n
                 - Founded at: $company->founded_at\n
                 - Address: $company->address\n
                 - Company type: $company->company_type\n
-                - Phone Number: $company->phone\n
-                - Email: $company->email\n
+                - Phone number: $company_phone_check\n
+                - Email: $company_email_check\n
                 - Adverising protected: $company->advertising_protected\n
+                \nLearn more about the company here: $link
                 ");
             }
         }
@@ -98,7 +103,9 @@ class CompaniesController extends Controller
                 'name' => $municipality,
                 'code' => $addressInfo['kommune']['kommuneKode']
             ]);
- 
+
+            $link = $node->filter('.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-105wgyd')->attr('href');
+
             $this->company = Company::updateOrCreate([
                 'name' => $jsonData['virksomhedMetadata']['nyesteNavn']['navn'],
                 'cvr' => $cvr,
@@ -113,6 +120,7 @@ class CompaniesController extends Controller
                 'email' => $jsonData['elektroniskPost'][0]['kontaktoplysning'] ?? null,                
                 'advertising_protected' => $jsonData['reklamebeskyttet'],
                 'company_type' => $jsonData['virksomhedMetadata']['nyesteVirksomhedsform']['langBeskrivelse'],
+                'link' => $link
             ]);
 
             $this->storeEmployeeHistory($jsonData);
