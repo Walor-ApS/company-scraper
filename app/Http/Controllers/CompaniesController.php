@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\CompanyEmployee;
+use App\Models\Municipality;
+use App\Models\SlackChannel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpClient\HttpClient;
@@ -15,89 +17,111 @@ class CompaniesController extends Controller
 
     public function index(): JsonResponse {
         $browser = new HttpBrowser(HttpClient::create());
-        $website = $browser->request('GET', 'https://www.proff.dk/segmentering?mainUnit=true&numEmployeesFrom=20&numEmployeesTo=49');
-        
-        $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();        
+        $url = 'https://www.proff.dk/segmentering?mainUnit=true&numEmployeesFrom=50&numEmployeesTo=52';
+        $website = $browser->request('GET', $url);                
+
+        $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
         
         //Handle pagination
         for ($i = 1; $i <= 1; $i++) {
-            $website = $browser->request('GET', "https://www.proff.dk/segmentering?mainUnit=true&numEmployeesFrom=20&numEmployeesTo=49&page=$i");
+            $website = $browser->request('GET', "$url&page=$i");
             $this->scrapeCompanies($website);
         }
+
+        $this->checkCompaniesHasExceededEmployeeNumber(50);
 
         return response()->json();
    }
 
-   public function scrapeCompanies($website) {
-        $website->filter('.MuiPaper-root .SegmentationSearchResultCard-card')->each(function ($node) {            
-            $link_href = $node->filter('div div h2 a')->attr('href');
-            
-            $browser = new HttpBrowser(HttpClient::create());
-            $website = $browser->request('GET', "https://www.proff.dk$link_href");
-            
-            //Fetching the data
-            //Fetch data from the two info boxes on the website
-            $this->company = new Company();
+   //Check companies have exceeded employee number
+   public function checkCompaniesHasExceededEmployeeNumber($employee_number) {
+        $companies = Company::all();  
+        
+        foreach ($companies as $company) {
+            $response = Http::withHeaders([
+                'Authorization' => 'cvr.dev_d1932811ecc4d5906d28c44d3a3fbdfb'
+                ])->get("https://api.cvr.dev/api/cvr/virksomhed?cvr_nummer=$company->cvr");
+    
+            $jsonData = $response->json()[0];
 
-            $website->filter('.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-md-2.css-1tw4074')->each(function ($node) {                
-                $node->filter('.MuiBox-root .OfficialCompanyInformationCard-propertyList')->each(function ($child) {
-                    $this->fetchCompanyInformation($child);
-                });
-            });
+            $monthlyEmployeeHistory = $jsonData['erstMaanedsbeskaeftigelse'];
+            $length = sizeof($monthlyEmployeeHistory) - 1;
 
-            $this->company = Company::updateOrCreate([
-                'name' => $this->company->name,
-                'cvr' => $this->company->cvr,
-                'founded_at' => $this->company->founded_at,
-                'employees' => $this->company->employees,
-                'address' => $this->company->address,
-                'company_type' => $this->company->company_type,
-                'phone' => $this->company->name,
-            ]);
-            $this->storeEmployeeHistory($this->company->cvr);
-        });        
+            $lastMonthEmployees = $monthlyEmployeeHistory[$length - 1]['antalAnsatte'];
+            $thisMonthEmployees = $monthlyEmployeeHistory[$length]['antalAnsatte'];
+
+            if ($thisMonthEmployees > $employee_number && $lastMonthEmployees < $employee_number) {
+                SlackChannel::SlackNotify("
+                🎉NEW POTENTIAL CLIENT🎉 \n
+                - Name: $company->name\n
+                - CVR: $company->cvr\n
+                - Employees: $company->employees\n
+                - Founded at: $company->founded_at\n
+                - Address: $company->address\n
+                - Company type: $company->company_type\n
+                - Phone Number: $company->phone\n
+                - Email: $company->email\n
+                - Adverising protected: $company->advertising_protected\n
+                ");
+            }
+        }
    }
 
-   public function fetchCompanyInformation($node) {
-        $fieldName = $node->filter('.OfficialCompanyInformationCard-property')->text();
-        $fieldValue = $node->filter('.OfficialCompanyInformationCard-propertyValue')->text();                
-        
-        if ($fieldName == "Juridisk navn") {
-            $this->company->name = $fieldValue;
-        }  
-        elseif ($fieldName == "CVR-nr") {
-            $this->company->cvr = $fieldValue;
-        }  
-        elseif ($fieldName == "Startdato") {
-            $this->company->founded_at = $fieldValue;
-        }
-        elseif ($fieldName == "Telefon") {
-            $this->company->phone = $fieldValue;
-        }  
-        elseif ($fieldName == "Adresse") {
-            $this->company->address = $fieldValue;
-        }  
-        elseif ($fieldName == "Selskabsform") {
-            $this->company->company_type = $fieldValue;
-        }  
-        elseif ($fieldName == "Antal ansatte") {
-            $this->company->employees = $fieldValue;
-        }  
+   //Store companies
+   public function scrapeCompanies($website) {
+        $website->filter('.MuiPaper-root .SegmentationSearchResultCard-card')->each(function ($node) {            
+            $cvr = substr($node->filter('.CardHeader-propertyList.MuiBox-root.css-gf5as1')->text(), 6, 8);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'cvr.dev_d1932811ecc4d5906d28c44d3a3fbdfb'
+                ])->get("https://api.cvr.dev/api/cvr/virksomhed?cvr_nummer=$cvr");
+    
+            $jsonData = $response->json()[0];
+    
+            if (! $jsonData) {
+                return response('JSON data was not found', 404);
+            }
+            
+            //Address info
+            $addressInfo = $jsonData['virksomhedMetadata']['nyesteBeliggenhedsadresse'];
+            $country = $addressInfo['landekode'];
+            $municipality = ucfirst(strtolower($addressInfo['kommune']['kommuneNavn']));
+            $zip_code = $addressInfo['postnummer'];
+            $city = $addressInfo['postdistrikt'];
+            $street_name = $addressInfo['vejnavn'];
+            $house_number = $addressInfo['husnummerFra'];
+            $house_letter = $addressInfo['bogstavFra'];
+            $address = "$street_name $house_number$house_letter, $zip_code $city";
+
+            //Create municipality
+            $municipality = Municipality::updateOrCreate([
+                'name' => $municipality,
+                'code' => $addressInfo['kommune']['kommuneKode']
+            ]);
+ 
+            $this->company = Company::updateOrCreate([
+                'name' => $jsonData['virksomhedMetadata']['nyesteNavn']['navn'],
+                'cvr' => $cvr,
+                'founded_at' => $jsonData['virksomhedMetadata']['stiftelsesDato'],
+                'employees' => $jsonData['virksomhedMetadata']['nyesteErstMaanedsbeskaeftigelse']['antalAnsatte'],
+                'address' => $address,
+                'zip_code' => $zip_code,
+                'country' => $country,
+                'city' => $city,
+                'municipality_id' => $municipality->id,
+                'phone' => $jsonData['telefonNummer'][0]['kontaktoplysning'] ?? null,
+                'email' => $jsonData['elektroniskPost'][0]['kontaktoplysning'] ?? null,                
+                'advertising_protected' => $jsonData['reklamebeskyttet'],
+                'company_type' => $jsonData['virksomhedMetadata']['nyesteVirksomhedsform']['langBeskrivelse'],
+            ]);
+
+            $this->storeEmployeeHistory($jsonData);
+        });
    }
 
    //Store employee history for company
-   public function storeEmployeeHistory($cvr) {
-        $response = Http::withHeaders([
-            'Authorization' => 'cvr.dev_d1932811ecc4d5906d28c44d3a3fbdfb'
-            ])->get("https://api.cvr.dev/api/cvr/virksomhed?cvr_nummer=$cvr");
-
-        $jsonData = $response->json();
-
-        if (! $jsonData) {
-            return;
-        }
-
-        foreach ($jsonData[0]['maanedsbeskaeftigelse'] as $employeeHistory) {
+   public function storeEmployeeHistory($jsonData) {        
+        foreach ($jsonData['erstMaanedsbeskaeftigelse'] as $employeeHistory) {
             CompanyEmployee::updateOrCreate([
                 'year' => $employeeHistory['aar'],
                 'month' => $employeeHistory['maaned'],
