@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->boolean('advertising_protected')->default(false);
             $table->string('link')->nullable();
+            $table->timestamp('noticed_at')->nullable();
             
             $table->timestamps();
         });

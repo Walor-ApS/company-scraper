@@ -9,7 +9,7 @@ class Company extends Model
 {
     use HasFactory;    
 
-    protected $fillable = ['municipality_id', 'country', 'cvr', 'founded_at', 'ended_at', 'name', 'address', 'zip_code', 'city', 'company_type', 'industry', 'phone', 'email', 'advertising_protected', 'employees', 'link'];
+    protected $fillable = ['municipality_id', 'country', 'cvr', 'founded_at', 'ended_at', 'name', 'address', 'zip_code', 'city', 'company_type', 'industry', 'phone', 'email', 'advertising_protected', 'employees', 'link', 'noticed_at'];
 
     public function employeeHistory()
     {

@@ -12,8 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('App\Http\Controllers\CompaniesController@index')->weekly('12:00');
-        //Command
+        $schedule->command('App\Http\Controllers\CompaniesController@index')->weekly();
     }
 
     /**
