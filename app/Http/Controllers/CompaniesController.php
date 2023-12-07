@@ -17,13 +17,13 @@ class CompaniesController extends Controller
 
     public function index(): JsonResponse {
         $browser = new HttpBrowser(HttpClient::create());
-        $url = 'https://www.proff.dk/segmentering?mainUnit=true&numEmployeesFrom=50&numEmployeesTo=52';
+        $url = 'https://www.proff.dk/segmentering?mainUnit=true&numEmployeesFrom=20&numEmployeesTo=49';
         $website = $browser->request('GET', $url);                
 
         $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
         
         //Handle pagination
-        for ($i = 1; $i <= 1; $i++) {
+        for ($i = 1; $i <= $maxPages; $i++) {
             $website = $browser->request('GET', "$url&page=$i");
             $this->scrapeCompanies($website);
         }
@@ -34,7 +34,7 @@ class CompaniesController extends Controller
    }
 
    //Check companies have exceeded employee number
-   public function checkCompaniesHasExceededEmployeeNumber($employee_number) {
+   public function checkCompaniesHasExceededEmployeeNumber(Int $employee_number): void {
         $companies = Company::all();  
         
         foreach ($companies as $company) {
@@ -73,7 +73,7 @@ class CompaniesController extends Controller
    }
 
    //Store companies
-   public function scrapeCompanies($website) {
+   public function scrapeCompanies($website): void {
         $website->filter('.MuiPaper-root .SegmentationSearchResultCard-card')->each(function ($node) {            
             $cvr = substr($node->filter('.CardHeader-propertyList.MuiBox-root.css-gf5as1')->text(), 6, 8);
 
@@ -128,7 +128,7 @@ class CompaniesController extends Controller
    }
 
    //Store employee history for company
-   public function storeEmployeeHistory($jsonData) {        
+   public function storeEmployeeHistory(Array $jsonData): void {        
         foreach ($jsonData['erstMaanedsbeskaeftigelse'] as $employeeHistory) {
             CompanyEmployee::updateOrCreate([
                 'year' => $employeeHistory['aar'],
@@ -144,3 +144,5 @@ class CompaniesController extends Controller
         return $company->employeeHistory()->get();
    }
 }
+
+//Action or service
