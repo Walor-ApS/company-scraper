@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class CompanyEmployee extends Model
 {
     use HasFactory;
-    protected $fillable = ['year', 'month', 'employees', 'company_id'];
+    protected $fillable = ['year', 'month', 'employees', 'company_id', 'week', 'employees_range'];
 }

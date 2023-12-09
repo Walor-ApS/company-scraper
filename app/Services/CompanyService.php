@@ -2,68 +2,102 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
 use App\Models\Company;
-use App\Models\SlackChannel;
+use App\Actions\TranslateIconNames;
 use App\Models\CompanyEmployee;
-use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\BrowserKit\HttpBrowser;
 
 class CompanyService {
-  //Check companies have exceeded employee number
-  public function checkCompaniesHasExceededEmployeeNumber(): void {
-      $companies = Company::all();  
-      
-      foreach ($companies as $company) {
-          $response = Http::withHeaders([
-            'Authorization' => 'cvr.dev_d1932811ecc4d5906d28c44d3a3fbdfb'
-            ])->get("https://api.cvr.dev/api/cvr/virksomhed?cvr_nummer=$company->cvr");
+  private $company;
+  private $site;
+  private $country;
 
-          $jsonData = $response->json()[0];
+  public function setup(String $site, String $url, String $country): void {
+    $this->site = $site;
+    $this->country = $country;
 
-          $monthlyEmployeeHistory = $jsonData['erstMaanedsbeskaeftigelse'];
-          $length = sizeof($monthlyEmployeeHistory) - 1;
+    $browser = new HttpBrowser(HttpClient::create());
+    $website = $browser->request('GET', $url);
 
-          $lastMonthEmployees = $monthlyEmployeeHistory[$length - 1]['antalAnsatte'];
-          $thisMonthEmployees = $monthlyEmployeeHistory[$length]['antalAnsatte'];
-
-          if ($thisMonthEmployees > 50 && $lastMonthEmployees < 50 || $thisMonthEmployees > 250 && $lastMonthEmployees < 250) {    
-            $monthsBetweenDates = Carbon::now()->diffInMonths($company->noticed_at);
-            if ($monthsBetweenDates >= 3) {
-                $companyPhoneCheck = $company->phone == null ? "Unknown" : $company->phone;
-                $companyEmailCheck = $company->email == null ? "Unknown" : $company->email;
-                $link = "https://www.proff.dk$company->link";
+    $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
     
-                SlackChannel::SlackNotify("
-                🎉 NEW POTENTIAL CLIENT 🎉 \n
-                - Name: $company->name\n
-                - CVR: $company->cvr\n
-                - Employees: $company->employees\n
-                - Founded at: $company->founded_at\n
-                - Address: $company->address\n
-                - Company type: $company->company_type\n
-                - Phone number: $companyPhoneCheck\n
-                - Email: $companyEmailCheck\n
-                - Adverising protected: $company->advertising_protected\n
-                \nLearn more about the company here: $link
-                ");
-    
-                $company->update([
-                    'noticed_at' => Carbon::now()
-                ]);
-            }                  
-          }
-      }
+    //Handle pagination
+    for ($i = 1; $i <= $maxPages; $i++) {
+        $website = $browser->request('GET', "$url&page=$i");
+        $this->scrapeCompanies($website);
+    } 
   }
 
-  //Store employee history for company
-  public function storeEmployeeHistory(Array $jsonData, Company $company): void {        
-    foreach ($jsonData['erstMaanedsbeskaeftigelse'] as $employeeHistory) {
-        CompanyEmployee::updateOrCreate([
-            'year' => $employeeHistory['aar'],
-            'month' => $employeeHistory['maaned'],
-            'employees' => $employeeHistory['antalAnsatte'],
-            'company_id' => $company->id
+  public function scrapeCompanies(\Symfony\Component\DomCrawler\Crawler $website): void {      
+    $website->filter('.MuiPaper-root .SegmentationSearchResultCard-card')->each(function ($node) {            
+        $link_href = $node->filter('div div h2 a')->attr('href');
+
+        $browser = new HttpBrowser(HttpClient::create());
+        $website = $browser->request('GET', "$this->site$link_href");
+
+        //Scrape Company
+        $this->company = new Company();
+
+        $website->filter('.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-md-2.css-1tw4074')->each(function ($node) {                
+            $node->filter('.MuiBox-root .OfficialCompanyInformationCard-propertyList')->each(function ($child) {
+              $this->fetchCompanyInformation($child);
+            });
+        });
+
+        $company = Company::updateOrCreate([
+          'cvr' => $this->company->cvr,
+          'name' => $this->company->name,
+        ],
+        [
+            'founded_at' => $this->company->founded_at,
+            'address' => $this->company->address,
+            'company_type' => $this->company->company_type,
+            'phone' => $this->company->phone,
+            'country' => $this->country
         ]);
-    }
+
+        CompanyEmployee::create([
+          'company_id' => $company->id,
+          'year' => Carbon::now()->year,
+          'month' => Carbon::now()->month,
+          'week' => Carbon::now()->weekNumberInMonth,
+          'employees' => $this->company->employees,
+          'employees_range' => $this->company->employees_range,
+        ]);
+    });  
+  }  
+
+  public function fetchCompanyInformation($node): void {
+      $fieldName = $node->filter('.OfficialCompanyInformationCard-property')->text();
+      $fieldValue = $node->filter('.OfficialCompanyInformationCard-propertyValue')->text();  
+      $translatedWords = (new TranslateIconNames())->index($this->country);                  
+
+      if ($fieldName == $translatedWords['name']) {
+        $this->company->name = $fieldValue;
+      }  
+      elseif ($fieldName == $translatedWords['cvr']) {
+        $this->company->cvr = $fieldValue;
+      }  
+      elseif ($fieldName == $translatedWords['founded_at']) {
+        $this->company->founded_at = $fieldValue;
+      }
+      elseif ($fieldName == $translatedWords['phone']) {
+        $this->company->phone = $fieldValue;
+      }  
+      elseif ($fieldName == $translatedWords['address']) {
+        $this->company->address = $fieldValue;
+      }  
+      elseif ($fieldName == $translatedWords['company_type']) {
+        $this->company->company_type = $fieldValue;
+      }  
+      elseif ($fieldName == $translatedWords['employees']) {
+        if (str_contains($fieldValue, '-')) {
+          $this->company->employees_range = trim($fieldValue);
+          return;
+        }
+        $this->company->employees = $fieldValue;
+      }  
   }
 }

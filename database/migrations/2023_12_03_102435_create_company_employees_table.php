@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('company_employees', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
-
-            $table->integer('year');
-            $table->tinyInteger('month');
-            $table->integer('employees');
+            
+            $table->integer('year')->nullable();
+            $table->tinyInteger('month')->nullable();
+            $table->tinyInteger('week')->nullable();
+            $table->integer('employees')->nullable();
+            $table->string('employees_range')->nullable();
             $table->timestamps();
         });
     }

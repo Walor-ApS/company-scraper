@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('founded_at')->nullable();
             $table->string('ended_at')->nullable();
             $table->string('name');
-            $table->integer('employees');
             $table->string('address')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
