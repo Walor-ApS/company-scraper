@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Company;
 use App\Actions\TranslateIconNames;
 use App\Models\CompanyEmployee;
+use App\Models\Municipality;
 use Carbon\Carbon;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -24,7 +25,7 @@ class CompanyService {
     $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
     
     //Handle pagination
-    for ($i = 1; $i <= $maxPages; $i++) {
+    for ($i = 1; $i <= 1; $i++) {
         $website = $browser->request('GET', "$url&page=$i");
         $this->scrapeCompanies($website);
     } 
@@ -46,6 +47,15 @@ class CompanyService {
             });
         });
 
+        if ( $this->company->municipality_code ) {
+          $municipality = Municipality::updateOrCreate([
+            'code' => $this->company->municipality_code,
+            'country' => $this->country
+          ], [
+            'name' => $this->company->municipality_name,
+          ]);        
+        }
+
         $company = Company::updateOrCreate([
           'cvr' => $this->company->cvr,
           'name' => $this->company->name,
@@ -55,7 +65,8 @@ class CompanyService {
             'address' => $this->company->address,
             'company_type' => $this->company->company_type,
             'phone' => $this->company->phone,
-            'country' => $this->country
+            'country' => $this->country,
+            'municipality_id' => $municipality->id ?? null
         ]);
 
         CompanyEmployee::create([
@@ -88,6 +99,12 @@ class CompanyService {
       }  
       elseif ($fieldName == $translatedWords['address']) {
         $this->company->address = $fieldValue;
+
+        $municipality = explode(',', $fieldValue)[1] ?? null;
+        if ( $municipality ) {
+          $this->company->municipality_name = trim(preg_replace('/[0-9]+/', '', $municipality));      
+          $this->company->municipality_code = trim(str_replace($this->company->municipality_name, '', $municipality));        
+        };
       }  
       elseif ($fieldName == $translatedWords['company_type']) {
         $this->company->company_type = $fieldValue;
