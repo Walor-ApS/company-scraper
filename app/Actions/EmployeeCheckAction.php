@@ -35,7 +35,7 @@ class EmployeeCheckAction {
           
           SlackChannel::SlackNotify("
           🎉 NEW POTENTIAL CLIENT 🎉 \n
-              - Country
+              - Country {$company->country}
               - Name: {$this->checkVariable($company->name)}\n
               - CVR: {$this->checkVariable($company->cvr)}\n
               - Employees: $employeesCheck\n

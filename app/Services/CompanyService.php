@@ -53,7 +53,7 @@ class CompanyService {
             'country' => $this->country
           ], [
             'name' => $this->company->municipality_name,
-          ]);        
+          ]);
         }
 
         $company = Company::updateOrCreate([
@@ -68,7 +68,7 @@ class CompanyService {
             'country' => $this->country,
             'municipality_id' => $municipality->id ?? null
         ]);
-
+      
         CompanyEmployee::create([
           'company_id' => $company->id,
           'year' => Carbon::now()->year,
