@@ -35,6 +35,7 @@ class EmployeeCheckAction {
           
           SlackChannel::SlackNotify("
           🎉 NEW POTENTIAL CLIENT 🎉 \n
+              - Country
               - Name: {$this->checkVariable($company->name)}\n
               - CVR: {$this->checkVariable($company->cvr)}\n
               - Employees: $employeesCheck\n
@@ -42,7 +43,7 @@ class EmployeeCheckAction {
               - Address: {$this->checkVariable($company->address)}\n
               - Company type: {$this->checkVariable($company->company_type)}\n
               - Phone number: {$this->checkVariable($$company->phone)}\n
-              - Adverising protected: {$this->checkVariable($company->advertising_protected == true)}\n
+              - Adverising protected: {$this->checkVariable($company->advertising_protected == true)}\n              
           \nLearn more about the company here: $link
           ");
         }                  

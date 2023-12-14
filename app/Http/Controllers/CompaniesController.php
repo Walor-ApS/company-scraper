@@ -14,11 +14,11 @@ class CompaniesController extends Controller
     public function index(): JsonResponse {   
         //Danish
         //20-49
-        $url = 'https://www.proff.dk/segmentering?numEmployeesFrom=50&numEmployeesTo=52';
+        $url = 'https://www.proff.dk/segmentering?numEmployeesFrom=20&numEmployeesTo=49&mainUnit=true';
         (new CompanyService())->setup('https://www.proff.dk', $url, 'DK');
-        
+
         //159-249
-        $url = 'https://www.proff.dk/segmentering?numEmployeesFrom=159&numEmployeesTo=249';        
+        $url = 'https://www.proff.dk/segmentering?numEmployeesFrom=159&numEmployeesTo=249&mainUnit=true';        
         (new CompanyService())->setup('https://www.proff.dk', $url, 'DK');
 
         //Sweden
