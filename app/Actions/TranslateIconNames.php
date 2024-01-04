@@ -9,7 +9,9 @@ class TranslateIconNames {
         return [
           'name' => 'Juridisk navn',
           'cvr' => 'CVR-nr',
+          'cvr_short' => 'CVR-nr',
           'employees' => 'Antal ansatte',
+          'employees_short' => 'Antal ansatte',
           'address' => 'Adresse',
           'founded_at' => 'Startdato',
           'phone' => 'Telefon',
@@ -20,7 +22,9 @@ class TranslateIconNames {
         return [
           'name' => 'Virallinen nimi',
           'cvr' => 'Y-tunnus',
+          'cvr_short' => 'Y-tunnus',
           'employees' => 'Työntekijät',
+          'employees_short' => 'Työntekijät',
           'address' => 'Osoite',
           'founded_at' => 'Rekisteröintipäivä',
           'phone' => 'Puhelin',
@@ -31,7 +35,9 @@ class TranslateIconNames {
         return [
           'name' => 'Juridisk navn',
           'cvr' => 'Org nr',
+          'cvr_short' => 'Org nr',
           'employees' => 'Antall ansatte',
+          'employees_short' => 'Ansatte',
           'address' => 'Adresse',
           'founded_at' => 'Stiftelsesdato',
           'phone' => 'Telefon',
@@ -42,7 +48,9 @@ class TranslateIconNames {
         return [
           'name' => 'Juridiskt namn',
           'cvr' => 'Organisationsnummer',
+          'cvr_short' => 'Org.nr',
           'employees' => 'Antal anställda',
+          'employees_short' => 'Anställda',
           'address' => 'Adress',
           'founded_at' => 'Registreringsdatum',
           'phone' => 'Telefon',

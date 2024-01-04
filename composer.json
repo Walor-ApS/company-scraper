@@ -13,6 +13,7 @@
         "laravel/slack-notification-channel": "^3.1",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
+        "react/promise": "^3.1",
         "symfony/browser-kit": "^6.4",
         "symfony/panther": "^2.1",
         "weidner/goutte": "^2.3"

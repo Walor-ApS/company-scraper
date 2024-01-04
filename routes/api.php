@@ -15,5 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('companies', [CompaniesController::class, 'index']);
+Route::get('companies', [CompaniesController::class, 'fetchCompanies']);
+Route::get('employees', [CompaniesController::class, 'fetchEmployees']);
 Route::get('companies/{company}', [CompaniesController::class, 'fetchEmployeeHistoryForCompany']);
