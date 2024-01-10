@@ -23,7 +23,7 @@ class CompanyService {
     $this->companies = Company::all();
     
     //Handle pagination
-    for ($i = 1; $i <= $maxPages; $i++) {
+    for ($i = 1; $i <= 1; $i++) {
         $website = $this->browser->request('GET', "$url&page=$i");
         $this->scrapeCompanies($website);
     } 
@@ -45,7 +45,7 @@ class CompanyService {
 
       $link_href = $node->filter('div div h2 a')->attr('href');
       $website = $this->browser->request('GET', "$this->site$link_href");
-
+      
       (new ScrapeCompanyService())->setup($website, $this->country);
     });  
   }

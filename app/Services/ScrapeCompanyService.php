@@ -28,22 +28,20 @@ class ScrapeCompanyService {
         'name' => $this->company->municipality_name,
       ]);
     }
-    
+
     Company::create([
       'cvr' => $this->company->cvr,
       'name' => $this->company->name,
-    ],
-    [
-        'founded_at' => $this->company->founded_at,
-        'address' => $this->company->address,
-        'company_type' => $this->company->company_type,
-        'phone' => $this->company->phone,
-        'country' => $this->country,
-        'municipality_id' => $municipality->id ?? null
+      'founded_at' => $this->company->founded_at,
+      'address' => $this->company->address,
+      'company_type' => $this->company->company_type,
+      'phone' => $this->company->phone,
+      'country' => $this->country,
+      'municipality_id' => $municipality->id ?? null
     ]);
   }
 
-  public function fetchCompanyInformation($node): void {
+  public function fetchCompanyInformation(mixed $node): void {
     $fieldName = $node->filter('.OfficialCompanyInformationCard-property')->text();
     $fieldValue = $node->filter('.OfficialCompanyInformationCard-propertyValue')->text();  
     $translatedWords = (new TranslateIconNames())->index($this->country);

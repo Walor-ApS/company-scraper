@@ -1625,16 +1625,16 @@
         },
         {
             "name": "laravel/slack-notification-channel",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/slack-notification-channel.git",
-                "reference": "c74265319b1d0ca710771d6c708558553972e1d6"
+                "reference": "bac7511508039a98e1a8120695adac5d82fdf452"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/slack-notification-channel/zipball/c74265319b1d0ca710771d6c708558553972e1d6",
-                "reference": "c74265319b1d0ca710771d6c708558553972e1d6",
+                "url": "https://api.github.com/repos/laravel/slack-notification-channel/zipball/bac7511508039a98e1a8120695adac5d82fdf452",
+                "reference": "bac7511508039a98e1a8120695adac5d82fdf452",
                 "shasum": ""
             },
             "require": {
@@ -1684,9 +1684,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/slack-notification-channel/issues",
-                "source": "https://github.com/laravel/slack-notification-channel/tree/v3.1.0"
+                "source": "https://github.com/laravel/slack-notification-channel/tree/v3.1.1"
             },
-            "time": "2023-10-30T17:52:13+00:00"
+            "time": "2024-01-06T17:03:22+00:00"
         },
         {
             "name": "laravel/tinker",
