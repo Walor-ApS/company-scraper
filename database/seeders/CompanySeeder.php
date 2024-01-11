@@ -20,8 +20,8 @@ class CompanySeeder extends Seeder
     {
         foreach(CompanyData::COMPANIES as $company) {
             Company::firstOrCreate([
-                'cvr' => $company->cvr,
-            ], $company->toArray());
+                'cvr' => $company['cvr'],
+            ], [...$company, 'created_at' => now(), 'updated_at' => now(),]);
         }
     }
 }
