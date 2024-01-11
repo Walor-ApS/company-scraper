@@ -171,8 +171,13 @@ return [
 
         /*
          * To enable web scraping
-         */ 
+         */
         Weidner\Goutte\GoutteServiceProvider::class,
+
+        /*
+         * To read XLXS files
+         */
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -189,6 +194,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];

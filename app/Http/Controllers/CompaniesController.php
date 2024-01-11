@@ -2,24 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\DomCrawler\Crawler;
+use App\Models\Company;
+use App\Services\CompanyService;
+use App\Services\EmployeeService;
+use Illuminate\Http\JsonResponse;
+use App\Actions\EmployeeCheckAction;
+
+set_time_limit(999999999009);
 
 class CompaniesController extends Controller
 {
-    public function index() {
+    public function fetchCompanies(): JsonResponse {
+      //Danish
+      //37-49
+      $url = 'https://www.proff.dk/segmentering?numEmployeesFrom=37&numEmployeesTo=49&mainUnit=true';
+      (new CompanyService())->setup('https://www.proff.dk', $url, 'DK');
 
-        // * First version
-        $client = new HttpBrowser(HttpClient::create());
-        $crawler = $client->request('GET', 'https://datacvr.virk.dk/soegeresultater?sideIndex=0&enhedstype=virksomhed&antalAnsatte=ANTAL_20_49&virksomhedsstatus=aktiv%252Cnormal&size=10');            
-        
-        // * Second version with chrome client
-        // $client = Client::createChromeClient();    // create a chrome client
-        // $crawler = $client->request('GET', 'https://datacvr.virk.dk/soegeresultater?sideIndex=0&enhedstype=virksomhed&antalAnsatte=ANTAL_20_49&virksomhedsstatus=aktiv%252Cnormal&size=10');            
-        // $client->waitFor('div');
-        
-        return $crawler->html();
-    }
+      // //220-249
+      // $url = 'https://www.proff.dk/segmentering?numEmployeesFrom=220&numEmployeesTo=249&mainUnit=true';
+      // (new CompanyService())->setup('https://www.proff.dk', $url, 'DK');
+
+      //Sweden
+      //37-49
+      $url = 'https://www.proff.se/segmentering?numEmployeesFrom=37&numEmployeesTo=49';
+      (new CompanyService())->setup('https://www.proff.se', $url, 'SV');
+
+      // //220-249
+      // $url = 'https://www.proff.se/segmentering?numEmployeesFrom=220&numEmployeesTo=249';
+      // (new CompanyService())->setup('https://www.proff.se', $url, 'SV');
+
+      //Norway
+      //37-49
+      $url = 'https://www.proff.no/segmentering?numEmployeesFrom=37&numEmployeesTo=49&mainUnit=true';
+      (new CompanyService())->setup('https://www.proff.no', $url, 'NO');
+
+      // //220-249
+      // $url = 'https://www.proff.no/segmentering?numEmployeesFrom=220&numEmployeesTo=249&mainUnit=true';
+      // (new CompanyService())->setup('https://www.proff.no', $url, 'NO');
+
+      //Finland
+      //20-49
+//      $url = 'https://www.proff.fi/segmentointi?employeeRange=50%20-%2099';
+//      (new CompanyService())->setup('https://www.proff.fi', $url, 'FI');
+
+      // //159-249
+      // $url = 'https://www.proff.fi/segmentointi?employeeRange=100%20-%20249';
+      // (new CompanyService())->setup('https://www.proff.fi', $url, 'FI');
+
+      return response()->json();
+   }
+
+   public function fetchEmployees(): JsonResponse {
+      (new EmployeeService())->setup();
+
+      return response()->json();
+   }
+
+   //Fetch employee history for company
+   public function fetchEmployeeHistoryForCompany(Company $company) {
+        return $company->employeeHistory()->get();
+   }
 }

@@ -1,18 +1,15 @@
 <?php
 
 use App\Http\Controllers\CompaniesController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::get('companies', [CompaniesController::class, 'fetchCompanies']);
+Route::get('employees', [CompaniesController::class, 'fetchEmployees']);
+Route::get('companies/{company}/employees', [CompaniesController::class, 'fetchEmployeeHistoryForCompany']);
 
-Route::apiResource('companies', CompaniesController::class);
+Route::prefix('data')->group(function () {
+    Route::get('companies', [DataController::class, 'companies']);
+    Route::get('employees', [DataController::class, 'employees']);
+    Route::get('municipalities', [DataController::class, 'municipalities']);
+});
