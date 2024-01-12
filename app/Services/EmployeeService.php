@@ -17,7 +17,7 @@ class EmployeeService {
 
   public function setup(): void {
     $companies = Company::all();
-    
+
     foreach($companies as $company) {
       $this->company = $company;
       $this->translatedWords = (new TranslateIconNames())->index($this->company->country);
@@ -29,7 +29,7 @@ class EmployeeService {
       }
 
       $website = $this->browser->request('GET', $url);
-      $website->filter('.MuiBox-root .MuiBox-root .MuiGrid-root div')->each(function ($node) {                
+      $website->filter('.MuiBox-root .MuiBox-root .MuiGrid-root div')->each(function ($node) {
         $node->filter('.MuiBox-root .OfficialCompanyInformationCard-propertyList')->each(function ($child) {
           $fieldName = $child->filter('.OfficialCompanyInformationCard-property')->text();
           $fieldValue = $child->filter('.OfficialCompanyInformationCard-propertyValue')->text();
