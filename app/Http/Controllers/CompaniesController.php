@@ -55,8 +55,6 @@ class CompaniesController extends Controller
 
     public function fetchEmployees(): JsonResponse
     {
-        logger()->info('fetchEmployees ran on schedule');
-
         (new EmployeeService())->setup();
 
         return response()->json();

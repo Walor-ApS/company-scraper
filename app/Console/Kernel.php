@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('App\Http\Controllers\CompaniesController@fetchEmployees')->everyTwoMinutes();
+        $schedule->command('fetch-employees')->everyTwoMinutes();
     }
 
     /**
