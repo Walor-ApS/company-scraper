@@ -12,6 +12,7 @@ class Municipality extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'name',
         'code',
         'country',

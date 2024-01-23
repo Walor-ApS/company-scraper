@@ -19,21 +19,21 @@ class CompanyService {
     $this->browser = new HttpBrowser(HttpClient::create());
     $website = $this->browser->request('GET', $url);
 
-    $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
+    // $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
     $this->companies = Company::all();
-    
+
     //Handle pagination
     for ($i = 1; $i <= 1; $i++) {
         $website = $this->browser->request('GET', "$url&page=$i");
         $this->scrapeCompanies($website);
-    } 
+    }
   }
 
-  public function scrapeCompanies(\Symfony\Component\DomCrawler\Crawler $website): void {      
-    $website->filter('.MuiPaper-root .SegmentationSearchResultCard-card')->each(function ($node) {            
+  public function scrapeCompanies(\Symfony\Component\DomCrawler\Crawler $website): void {
+    $website->filter('.MuiPaper-root .SegmentationSearchResultCard-card')->each(function ($node) {
       $name = $node->filter('div div h2 a')->text();
       $cvr = $node->filter('div div div span')->text();
-      
+
       $company = $this->companies->first(function ($company) use ($cvr, $name) {
         return str_contains($cvr, $company->cvr) && $company->name == $name;
       });
@@ -45,8 +45,8 @@ class CompanyService {
 
       $link_href = $node->filter('div div h2 a')->attr('href');
       $website = $this->browser->request('GET', "$this->site$link_href");
-      
+
       (new ScrapeCompanyService())->setup($website, $this->country);
-    });  
+    });
   }
 }
