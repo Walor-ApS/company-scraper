@@ -43,7 +43,7 @@ class EmployeeCheckAction {
     //   \nLearn more about the company here: $link
     //   ");
 
-      $newCompanyEmployees = $newCompany->employees !== null ? $this->employeeRoundDown($newCompany->employees) : $newCompany->employees_range;
+      $newCompanyEmployees = $newCompany->employees !== null ? $this->employeeRoundDown($newCompany->employees) : $this->employeeRangeRoundDown($newCompany->employees_range);
       TriggerLead::create([
         'company_id' => $company->id,
         'employees' => $newCompanyEmployees,
@@ -55,19 +55,19 @@ class EmployeeCheckAction {
   }
 
   function employeeRoundDown($number) {
-      if ($number <= 250) {
-          return floor($number / 50) * 50;
-      } else {
-          return floor($number / 250) * 250;
-      }
+    if ($number <= 250) {
+        return floor($number / 50) * 50;
+    } else {
+        return floor($number / 250) * 250;
+    }
   }
 
-  function employeeRamgeRoundDown($range) {
-      if ($range == "50 - 99") { // * Check why this doesnt work
-          return 50;
-      } else {
-          return 250;
-      }
+  function employeeRangeRoundDown($range) {
+    if ($range == "50 - 99") {
+        return 50;
+    } else {
+        return 250;
+    }
   }
   
   public function checkVariable($var): String {
