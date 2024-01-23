@@ -4,11 +4,12 @@ namespace App\Actions;
 
 use App\Models\Company;
 use App\Models\SlackChannel;
+use App\Models\TriggerLead;
 
 class EmployeeCheckAction {
   public function excecute(Company $company): void {
     $employee_history = $company->employeeHistory()->get();
-    $newCompany = $employee_history->first();
+    $newCompany = $employee_history->first();    
     $oldCompany = $employee_history->skip(1)->first();
     
     if (! $newCompany || ! $oldCompany) {
@@ -24,7 +25,7 @@ class EmployeeCheckAction {
       || 
       $newCompany->employees_range == "250 - 499" && $oldCompany->employees_range == "100 - 249"
       ) {
-            
+      
       $employeesCheck = $newCompany->employees == null ? $newCompany->employees : $newCompany->employees_range;
       $link = "https://www.proff.dk{$company->link}";
       
@@ -41,6 +42,31 @@ class EmployeeCheckAction {
         - Adverising protected: {$this->checkVariable($company->advertising_protected == true)}\n              
       \nLearn more about the company here: $link
       ");
+
+      $newCompanyEmployees = $newCompany->employees !== null ? $this->employeeRoundDown($newCompany->employees) : $this->employeeRangeRoundDown($newCompany->employees_range);
+      TriggerLead::create([
+        'company_id' => $company->id,
+        'employees' => $newCompanyEmployees,
+        'country' => $company->country,
+        'year' => $company->created_at->format('Y'),
+        'month' => $company->created_at->format('F'),
+      ]);
+    }
+  }
+
+  function employeeRoundDown($number) {
+    if ($number <= 250) {
+        return floor($number / 50) * 50;
+    } else {
+        return floor($number / 250) * 250;
+    }
+  }
+
+  function employeeRangeRoundDown($range) {
+    if ($range == "50 - 99") {
+        return 50;
+    } else {
+        return 250;
     }
   }
   

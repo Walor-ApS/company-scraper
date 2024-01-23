@@ -37,7 +37,7 @@ class CompanyService {
       $company = $this->companies->first(function ($company) use ($cvr, $name) {
         return str_contains($cvr, $company->cvr) && $company->name == $name;
       });
-
+      
       if ($company && str_contains($cvr, $company->cvr)) {
         //Company already exists
         return;

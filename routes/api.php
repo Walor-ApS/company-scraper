@@ -12,4 +12,5 @@ Route::prefix('data')->group(function () {
     Route::get('companies', [DataController::class, 'companies']);
     Route::get('employees', [DataController::class, 'employees']);
     Route::get('municipalities', [DataController::class, 'municipalities']);
+    Route::get('triggerLeads', [DataController::class, 'triggerLeads']);
 });

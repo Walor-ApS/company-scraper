@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .dropdown-btn {
+        background-color: theme("colors.gray");
+        padding: 8px 18px 8px 18px;
+        border-radius: 0.75rem;
+        margin-top: 2px;
+        text-align: center;
+        transition: background-color 0.2s ease;
+    }
+    .dropdown-btn:hover {
+        background-color: gainsboro;
+    }
+
+    .table-head {
+        color: theme("colors.darkGray");
+        font-weight: medium;
+    }
+
+    input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgb(235, 235, 235);
+        background-color: white;
+        border-radius: 8px;
+        transform: translateY(-0.075em);
+        display: grid;
+        place-content: center;
+    }
+
+    input[type="checkbox"]::before {
+        content: "";
+        width: 25px;
+        height: 25px;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        border-radius: 6px;
+        background-color: theme("colors.blueOpacity");
+    }
+
+    input[type="checkbox"]:checked::before {
+        transform: scale(1);
+    }
+}
