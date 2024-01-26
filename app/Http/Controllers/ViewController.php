@@ -9,6 +9,6 @@ use Illuminate\Support\Facades\DB;
 class ViewController extends Controller
 {
     public function index() {
-        return redirect('/trigger-leads?year=2024');
+        return redirect('/triggerLeads');
     }
 }

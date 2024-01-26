@@ -14,7 +14,7 @@ class EmployeeCheckAction {
     
     if (! $newCompany || ! $oldCompany) {
       return;
-    };    
+    };
     
     if (
       $newCompany->employees > 50 && $oldCompany->employees < 50 
@@ -29,19 +29,19 @@ class EmployeeCheckAction {
       $employeesCheck = $newCompany->employees == null ? $newCompany->employees : $newCompany->employees_range;
       $link = "https://www.proff.dk{$company->link}";
       
-      SlackChannel::SlackNotify("
-    🎉 NEW POTENTIAL CLIENT 🎉 \n
-        - Country {$company->country}
-        - Name: {$this->checkVariable($company->name)}\n
-        - CVR: {$this->checkVariable($company->cvr)}\n
-        - Employees: $employeesCheck\n
-        - Founded at: {$company->founded_at}\n
-        - Address: {$this->checkVariable($company->address)}\n
-        - Company type: {$this->checkVariable($company->company_type)}\n
-        - Phone number: {$this->checkVariable($company->phone)}\n
-        - Adverising protected: {$this->checkVariable($company->advertising_protected == true)}\n              
-      \nLearn more about the company here: $link
-      ");
+    //   SlackChannel::SlackNotify("
+    // 🎉 NEW POTENTIAL CLIENT 🎉 \n
+    //     - Country {$company->country}
+    //     - Name: {$this->checkVariable($company->name)}\n
+    //     - CVR: {$this->checkVariable($company->cvr)}\n
+    //     - Employees: $employeesCheck\n
+    //     - Founded at: {$company->founded_at}\n
+    //     - Address: {$this->checkVariable($company->address)}\n
+    //     - Company type: {$this->checkVariable($company->company_type)}\n
+    //     - Phone number: {$this->checkVariable($company->phone)}\n
+    //     - Adverising protected: {$this->checkVariable($company->advertising_protected == true)}\n              
+    //   \nLearn more about the company here: $link
+    //   ");
 
       $newCompanyEmployees = $newCompany->employees !== null ? $this->employeeRoundDown($newCompany->employees) : $this->employeeRangeRoundDown($newCompany->employees_range);
       TriggerLead::create([
@@ -49,7 +49,7 @@ class EmployeeCheckAction {
         'employees' => $newCompanyEmployees,
         'country' => $company->country,
         'year' => $company->created_at->format('Y'),
-        'month' => $company->created_at->format('F'),
+        'month' => $company->created_at->format('F')
       ]);
     }
   }

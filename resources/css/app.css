@@ -31,6 +31,8 @@
         transform: translateY(-0.075em);
         display: grid;
         place-content: center;
+        z-index: 0;
+        cursor: pointer;
     }
 
     input[type="checkbox"]::before {

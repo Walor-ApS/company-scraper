@@ -19,11 +19,11 @@ class CompanyService {
     $this->browser = new HttpBrowser(HttpClient::create());
     $website = $this->browser->request('GET', $url);
 
-    $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
+    // $maxPages = $website->filter('nav .MuiPagination-ul')->children()->eq(7)->text();
     $this->companies = Company::all();
 
     //Handle pagination
-    for ($i = 1; $i <= $maxPages; $i++) {
+    for ($i = 1; $i <= 1; $i++) {
         $website = $this->browser->request('GET', "$url&page=$i");
         $this->scrapeCompanies($website);
     }

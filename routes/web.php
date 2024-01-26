@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ViewController::class, 'index']);
 
-Route::prefix('trigger-leads')->group(function () {
+Route::prefix('triggerLeads')->group(function () {
   Route::get('/', [TriggerLeadsController::class, 'index']);
   Route::get('/{employees}/{year}/{month}', [TriggerLeadsController::class, 'show']);
-  Route::delete('/remove', [TriggerLeadsController::class, 'remove']);
+  Route::put('/update', [TriggerLeadsController::class, 'update']);  
 });
 
 Route::get('/b-corporations', [ViewController::class, 'triggerLeads']);

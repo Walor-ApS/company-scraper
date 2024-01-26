@@ -2,7 +2,7 @@
     $yearParam = request('year') ?? '2024';
 @endphp
 
-<x-layouts.header currentPage="{{ $currentPage }}">
+<x-layouts.header currentPage="{{ $currentPage }}" link="triggerLeads">
     <ul class="list-none flex space-x-2 default:ring-0">
         @foreach ($years as $year)
             <li>
@@ -13,11 +13,14 @@
     </ul>
 
     @forelse ($triggerLeads[$yearParam] ?? [] as $employees => $employeesData)
-        <h1 class="text-md pt-6 pb-4">Trigger Leads with {{ $employees }} employees</h1>
+        <h1 class="text-xl font-medium pt-10 pb-2 mb-4 border-b-[3px] border-blueOpacity">Trigger Leads with
+            {{ $employees }}
+            employees
+        </h1>
         <section class="grid xl:grid-cols-4 gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
             @forelse ($employeesData as $month => $monthData)
                 <a class="bg-white p-8 rounded-md cursor-pointer hover:shadow-md transition-shadow"
-                    href="/trigger-leads/{{ $employees }}/{{ $yearParam }}/{{ $month }}">
+                    href="/triggerLeads/{{ $employees }}/{{ $yearParam }}/{{ $month }}">
                     <p class="text-center text-xl font-bold">{{ $month }}</p>
                     <div class="grid grid-cols-4 pt-5">
                         {{-- Denmark --}}
