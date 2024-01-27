@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->boolean('advertising_protected')->default(false);
-            $table->string('link')->nullable();
+            $table->string('website')->nullable();
             $table->string('state')->default('New');
             $table->timestamps();
         });

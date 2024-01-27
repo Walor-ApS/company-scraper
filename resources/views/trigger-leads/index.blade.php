@@ -7,7 +7,7 @@
         @foreach ($years as $year)
             <li>
                 <a href="?year={{ $year }}"
-                    class="border border-darkGray rounded-full py-1 px-5 transition-opacity hover:opacity-75 {{ $yearParam == $year ? 'bg-blueOpacity text-blue' : 'text-darkGray' }}">{{ $year }}</a>
+                    class="border border-slate-400 rounded-full py-1 px-5 transition-opacity hover:opacity-75 {{ $yearParam == $year ? 'bg-blueOpacity text-blue' : 'text-darkGray' }}">{{ $year }}</a>
             </li>
         @endforeach
     </ul>

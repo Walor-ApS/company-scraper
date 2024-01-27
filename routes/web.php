@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\View\TriggerLeadsController;
-use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ViewController;
+use App\Http\Controllers\View\TriggerLeadsController;
+use App\Http\Controllers\View\BCorporationsViewController;
+use App\Http\Controllers\View\CompetitorsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +25,15 @@ Route::prefix('triggerLeads')->group(function () {
   Route::put('/update', [TriggerLeadsController::class, 'update']);  
 });
 
-Route::get('/b-corporations', [ViewController::class, 'triggerLeads']);
+Route::prefix('bcorporations')->group(function () {
+  Route::get('/', [BCorporationsViewController::class, 'index']);
+  Route::get('/{country}', [BCorporationsViewController::class, 'show']);
+  Route::put('/update', [BCorporationsViewController::class, 'update']);  
+});
+
+Route::prefix('competitors')->group(function () {
+  Route::get('/', [CompetitorsController::class, 'index']);
+  Route::post('/import', [CompetitorsController::class, 'import']);
+  Route::get('/{competitor}', [CompetitorsController::class, 'show']);
+  Route::put('/update', [CompetitorsController::class, 'update']);  
+});

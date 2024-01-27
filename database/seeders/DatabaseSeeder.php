@@ -21,10 +21,13 @@ class DatabaseSeeder extends Seeder
         // $this->call(CompanyEmployeeSeeder::class);
         // $this->command->info('Company employees seeded');
 
-        $this->call(TriggerLeadCompanySeeder::class);
-        $this->command->info('Trigger leads companies seeded');
+        // $this->call(TriggerLeadCompanySeeder::class);
+        // $this->command->info('Trigger leads companies seeded');
 
-        $this->call(TriggerLeadSeeder::class);
-        $this->command->info('Trigger leads seeded');
+        // $this->call(TriggerLeadSeeder::class);
+        // $this->command->info('Trigger leads seeded');
+
+        $this->call(BCorporationSeeder::class);
+        $this->command->info('BCorporations seeded');
     }
 }

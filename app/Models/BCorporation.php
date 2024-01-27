@@ -9,5 +9,6 @@ class BCorporation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['country', 'founded_at', 'name', 'description', 'link'];
+    protected $table = 'bcorporations';
+    protected $fillable = ['country', 'founded_at', 'name', 'description', 'website', 'state'];
 }

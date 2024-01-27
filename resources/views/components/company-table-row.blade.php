@@ -15,15 +15,16 @@
                 class="w-full rounded-full">
         </td>
     @endif
-    <td class="p-3 w-1/4 bg-white {{ isset($country) == false ? 'rounded-l-xl' : '' }}">{{ $lead->company->name }}
+    <td
+        class="p-3 w-[30%] bg-white {{ isset($country) == false ? 'rounded-l-xl' : '' }} {{ isset($link) ? 'text-blue' : '' }}">
+        <a @if (isset($link)) href="{{ $link }}" @endif target="_blank">{{ $company->name }}</a>
     </td>
-    <td class="bg-white w-1/6">{{ $lead->company->cvr }}</td>
-    <td class="bg-white w-[12%]">{{ $lead->employees }}</td>
+    {{ $slot }}
     <td class="bg-white">
         <div class="flex gap-x-2">
-            <input type="text" name="websites[]" placeholder="Add website" value="{{ $lead->company->link }}"
+            <input type="text" name="websites[]" placeholder="Add website" value="{{ $company->website }}"
                 class="outline-none flex-1 text-blue website-input">
-            <input type="hidden" name="companyIds[]" value="{{ $lead->company->id }}">
+            <input type="hidden" name="companyIds[]" value="{{ $company->id }}">
 
             <button type="submit" class="pr-2 hover:opacity-50 transition-opacity hidden website-button">
                 {!! file_get_contents('icons/edit-button.svg') !!}
@@ -32,12 +33,12 @@
     </td>
     <td class="bg-white w-[10%] pl-3 rounded-r-xl">
         <div
-            class="w-fit p-[1px] px-3 rounded-full text-sm {{ $lead->company->state == 'New' ? 'bg-red-200' : 'bg-green-200' }}">
-            {{ $lead->company->state }}
+            class="w-fit p-[1px] px-3 rounded-full text-sm {{ $company->state == 'New' ? 'bg-red-200' : 'bg-green-200' }}">
+            {{ $company->state }}
         </div>
     </td>
     <td class="pl-3 w-10">
-        <input type="checkbox" name="selected_companies[]" value="{{ $lead->company->id }}">
+        <input type="checkbox" name="selected_companies[]" value="{{ $company->id }}">
     </td>
 </tr>
 <tr class="h-1"></tr>

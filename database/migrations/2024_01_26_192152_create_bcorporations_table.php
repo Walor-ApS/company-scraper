@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->string('link');
+            $table->string('website')->nullable();
             $table->string('country');
             $table->string('founded_at')->nullable();
+            $table->string('state')->default('New');
             
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */

@@ -6,7 +6,7 @@
 
         <div class="pt-20">
             <x-nav-button text="Trigger Leads" link="triggerLeads" currentPage="{{ $currentPage }}"></x-nav-button>
-            <x-nav-button text="B Corporations" link="b-corporations" currentPage="{{ $currentPage }}"></x-nav-button>
+            <x-nav-button text="B Corporations" link="bcorporations" currentPage="{{ $currentPage }}"></x-nav-button>
             <x-nav-button text="Competitors" link="competitors" currentPage="{{ $currentPage }}"></x-nav-button>
         </div>
     </nav>

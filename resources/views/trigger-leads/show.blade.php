@@ -49,7 +49,10 @@
             @if ($countryParam == 'all')
                 @forelse ($triggerLeads as $country => $leads)
                     @foreach ($leads as $lead)
-                        <x-company-table-row :lead="$lead" :country="$country"></x-company-table-row>
+                        <x-company-table-row :company="$lead->company" :country="$country">
+                            <td class="bg-white w-1/6">{{ $lead->company->cvr }}</td>
+                            <td class="bg-white w-[12%]">{{ $lead->company->employees() }}</td>
+                        </x-company-table-row>
                     @endforeach
                 @empty
                     <tr>
@@ -58,7 +61,10 @@
                 @endforelse
             @else
                 @forelse ($triggerLeads["$countryCodeParam"] ?? [] as $country => $triggerLead)
-                    <x-company-table-row :lead="$triggerLead"></x-company-table-row>
+                    <x-company-table-row :company="$triggerLead->company">
+                        <td class="bg-white w-1/6">{{ $triggerLead->company->cvr }}</td>
+                        <td class="bg-white w-[12%]">{{ $triggerLead->company->employees() }}</td>
+                    </x-company-table-row>
                 @empty
                     <tr>
                         <td class="text-xs text-darkGray">There are no trigger leads for this request</td>

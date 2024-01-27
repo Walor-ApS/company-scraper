@@ -6,7 +6,7 @@ use App\Models\Company;
 use App\Models\TriggerLead;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
+use App\Services\UpdateCompanyService;
 
 class TriggerLeadsController extends Controller
 {
@@ -41,41 +41,8 @@ class TriggerLeadsController extends Controller
         ]);
     }
 
-    public function update(Request $request) {        
-        $websites = $request->input('websites', []);
-        $companyIds = $request->input('companyIds', []);
-
-        foreach ($websites as $key => $website) {
-            if ($website != null) {
-                $company = Company::find($companyIds[$key]);
-                $company->update([
-                    'link' => $website
-                ]);
-            }
-        }
-
-        $selectedCompanies = $request->input('selected_companies');
-        if ($selectedCompanies) {
-            foreach ($selectedCompanies as $key => $companyId) {
-                $company = Company::find($companyId);
-                
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . env('HUB_SPOT_ACCESS_TOKEN'),
-                    'Content-Type' => 'application/json',
-                ])->post("https://api.hubapi.com/crm/v3/objects/companies", [
-                    'properties' => [
-                        "country" => $company->country,
-                        "name" => $company->name,
-                        "phone" => $company->phone,
-                        "domain" => $company->link
-                    ]
-                ]);
-
-                $company->update([
-                    "state" => "Imported"
-                ]);
-            }
-        }
+    public function update(Request $request) {
+        (new UpdateCompanyService())->setup($request, new Company());
         
         return redirect()->back()->withInput(['refresh' => true]);
     }
