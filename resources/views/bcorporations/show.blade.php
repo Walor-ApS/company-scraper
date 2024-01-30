@@ -1,4 +1,4 @@
-<x-layouts.header currentPage="B Corporations" link="bcorporation" extension="{{ $country }}">
+<x-layouts.header currentPage="B Corporations" link="bcorporations" extension="{{ $country }}">
     <h1 class="text-2xl font-bold">B Corporations</h1>
 
     <form action="{{ url('bcorporations/update') }}" method="post">

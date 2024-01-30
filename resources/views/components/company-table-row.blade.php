@@ -27,7 +27,7 @@
             <input type="hidden" name="companyIds[]" value="{{ $company->id }}">
 
             <button type="submit" class="pr-2 hover:opacity-50 transition-opacity hidden website-button">
-                {!! file_get_contents('icons/edit-button.svg') !!}
+                {!! file_get_contents('icons/checkmark-icon.svg') !!}
             </button>
         </div>
     </td>

@@ -26,21 +26,23 @@ class CompetitorsController extends Controller
         ]);
     }
 
-    public function import(Request $request) {  
-        $fileName = $request->file->getClientOriginalName();
-        $endPosition = strpos($fileName, '-backlinks');;
-        $competitorName = substr($fileName, 0, $endPosition);
-
-        $companies = array_map('str_getcsv', file($request->file));
-        $companies = array_slice($companies, 1);
-
-        foreach ($companies as $company) {     
-            CompetitorCompany::updateOrCreate([
-                'name' => $company[0],
-                'page_url' => $company[1],
-                'competitor' => $competitorName
-            ]);
-        }
+    public function import(Request $request) {
+        if ($request->file) {
+            $fileName = $request->file->getClientOriginalName();
+            $endPosition = strpos($fileName, '-backlinks');;
+            $competitorName = substr($fileName, 0, $endPosition);
+    
+            $companies = array_map('str_getcsv', file($request->file));
+            $companies = array_slice($companies, 1);
+    
+            foreach ($companies as $company) {     
+                CompetitorCompany::updateOrCreate([
+                    'name' => $company[0],
+                    'page_url' => $company[1],
+                    'competitor' => $competitorName
+                ]);
+            }
+        } 
         
         return redirect()->back()->withInput(['refresh' => true]);
     }
