@@ -74,7 +74,7 @@ class BCorpCompanyService {
     sleep(1);
     $this->crawler = $this->client->refreshCrawler();
 
-    $this->fetchPage();
+    // $this->fetchPage();
  }   
 
   public function isLastPage(String $paginationText): Bool {

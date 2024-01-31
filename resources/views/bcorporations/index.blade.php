@@ -1,13 +1,5 @@
 <x-layouts.header currentPage="B Corporations" link="bcorporations">
-    {{-- Search field --}}
-    <form action="" class="w-full bg-white rounded-lg p-2 flex gap-x-2 items-center text-sm mb-8">
-        {!! file_get_contents('icons/search-icon.svg') !!}
-
-        <input name="search" type="text" placeholder="Country" class="flex-1 outline-none"
-            value="{{ request('search') ?? '' }}" />
-        <button type="submit"
-            class="bg-blue text-white rounded-md h-full px-4 py-2 transition-opacity hover:opacity-75">Search</button>
-    </form>
+    <x-searchbar placeholder="Country"></x-searchbar>
 
     <section class="grid xl:grid-cols-4 gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
         @forelse ($bcorporations as $country => $bcorporation)

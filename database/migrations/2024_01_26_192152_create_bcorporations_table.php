@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->string('link');
-            $table->string('website')->nullable();
+            $table->string('website');
             $table->string('country');
             $table->string('founded_at')->nullable();
             $table->string('state')->default('New');

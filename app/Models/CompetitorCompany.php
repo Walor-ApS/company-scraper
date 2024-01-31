@@ -9,5 +9,5 @@ class CompetitorCompany extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "page_url", "website", "state", "competitor"];
+    protected $fillable = ["name", "website", "state", "competitor_id"];
 }

@@ -6,7 +6,9 @@
                 {!! file_get_contents("icons/$link-icon.svg") !!}
             </div>
 
-            <h3 class="{{ $currentPage == $text ? 'text-blue' : 'text-darkGray' }}">{{ $text }}</h3>
+            <h3 class="text-left pl-3 {{ $currentPage == $text ? 'text-blue' : 'text-darkGray' }}">
+                {{ $text }}
+            </h3>
         </div>
     </button>
 </a>

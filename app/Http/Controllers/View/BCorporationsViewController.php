@@ -19,21 +19,27 @@ class BCorporationsViewController extends Controller
         }
 
         return view('bcorporations/index')->with([
-            'bcorporations' => $bcorporations
+            'bcorporations' => $bcorporations            
         ]);
     }
 
-    public function show(String $country) {
-        $bcorporations = BCorporation::where('country', $country)->paginate(24);
+    public function show(String $country, Request $request) {
+        $bcorporations = BCorporation::where('country', $country);
+
+        if ($request->search) {
+            $bcorporations->where("name", "LIKE", "%$request->search%");
+        }
         
         return view('bcorporations/show')->with([
-            'bcorporations' => $bcorporations,
-            'country' => $country
+            'bcorporationsCount' => count($bcorporations->get()),
+            'bcorporations' => $bcorporations->paginate(24),
+            'country' => $country,
         ]);
     }
 
-    public function update(Request $request) {
-        (new UpdateCompanyService())->setup($request, new BCorporation());        
+    public function update(String $country, Request $request) {
+        $bcorporations = BCorporation::where('country', $country)->get();
+        (new UpdateCompanyService())->setup($request, $bcorporations);
         
         return redirect()->back()->withInput(['refresh' => true]);
     }

@@ -10,7 +10,7 @@
             <x-nav-button text="Competitors" link="competitors" currentPage="{{ $currentPage }}"></x-nav-button>
         </div>
     </nav>
-    <section class="pt-10 pl-7 ml-80 bg-white h-28 fixed w-screen z-50">
+    <section class="pt-10 pl-7 ml-80 bg-white h-28 fixed w-screen z-30">
         <div class="flex items-center space-x-8">
             <a href="/{{ $link }}" class="text-2xl">{{ $currentPage }}</a>
             @if (isset($extension))

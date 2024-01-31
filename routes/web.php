@@ -22,18 +22,18 @@ Route::get('/', [ViewController::class, 'index']);
 Route::prefix('triggerLeads')->group(function () {
   Route::get('/', [TriggerLeadsController::class, 'index']);
   Route::get('/{employees}/{year}/{month}', [TriggerLeadsController::class, 'show']);
-  Route::put('/update', [TriggerLeadsController::class, 'update']);  
+  Route::put('/{employees}/{year}/{month}/{country}/update', [TriggerLeadsController::class, 'update']);  
 });
 
 Route::prefix('bcorporations')->group(function () {
   Route::get('/', [BCorporationsViewController::class, 'index']);
   Route::get('/{country}', [BCorporationsViewController::class, 'show']);
-  Route::put('/update', [BCorporationsViewController::class, 'update']);  
+  Route::put('/{country}/update', [BCorporationsViewController::class, 'update']);  
 });
 
 Route::prefix('competitors')->group(function () {
   Route::get('/', [CompetitorsController::class, 'index']);
   Route::post('/import', [CompetitorsController::class, 'import']);
   Route::get('/{competitor}', [CompetitorsController::class, 'show']);
-  Route::put('/update', [CompetitorsController::class, 'update']);  
+  Route::put('/{competitor}/update', [CompetitorsController::class, 'update']);
 });

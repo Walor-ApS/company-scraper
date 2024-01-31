@@ -4,6 +4,13 @@
         class="px-6 py-1 mr-2 bg-blueOpacity text-blue hover:opacity-50 transition-opacity rounded-md {{ $pages->onFirstPage() == true ? 'opacity-25' : '' }}">
         Previous</a>
 
+    {{-- First page --}}
+    @if ($pages->currentPage() - 2 >= 1)
+        <a href="{{ $pages->url(1) }}"
+            class="px-2 py-1 hover:opacity-50 transition rounded mx-1 cursor-pointer hover:bg-blueOpacity">1
+        </a>
+    @endif
+
     {{-- Pagination Elements --}}
     @for ($i = max(1, $pages->currentPage() - 1); $i <= min($pages->lastPage(), $pages->currentPage() + 3); $i++)
         <a href="{{ $pages->url($i) }}"

@@ -51,7 +51,7 @@
     }
 
     /* File selector */
-    input::file-selector-button {
+    /* input::file-selector-button {
         background-color: theme("colors.blueOpacity");
         border: 0;
         color: theme("colors.blue");
@@ -63,5 +63,5 @@
 
     input::file-selector-button:hover {
         opacity: 0.75;
-    }
+    } */
 }

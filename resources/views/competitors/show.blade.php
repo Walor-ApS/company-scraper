@@ -1,7 +1,8 @@
-<x-layouts.header currentPage="Competitors" link="competitors" extension="{{ $competitor }}">
-    <h1 class="text-2xl font-bold">Competitors</h1>
+<x-layouts.header currentPage="Competitors" link="competitors" extension="{{ $competitor->name }}">
+    <x-searchbar placeholder="Company"></x-searchbar>
+    <h1 class="text-2xl font-bold">Companies</h1>
 
-    <form action="{{ url('competitors/update') }}" method="post">
+    <form action="{{ url("competitors/$competitor->id/update") }}" method="post">
         @csrf
         @method('put')
 
@@ -9,14 +10,14 @@
             <tr>
                 <th class="table-head pl-3">Name</th>
                 <th class="table-head">Website</th>
-                <th class="table-head">State</th>
+                <th class="table-head pl-3">State</th>
                 <th class="table-head"></th>
             </tr>
             <tr class="h-2"></tr>
 
             @forelse ($companies as $company)
                 <tr>
-                    <x-company-table-row :company="$company" :link="$company->page_url"></x-company-table-row>
+                    <x-company-table-row :company="$company"></x-company-table-row>
                 </tr>
                 <tr class="h-1"></tr>
             @empty
@@ -26,8 +27,10 @@
             @endforelse
         </table>
 
-        <button type="submit" class="mt-4 bg-blueOpacity p-2 px-8 rounded-full hover:opacity-75 transition-opacity">
-            Import Competitors</button>
+        @php
+            $confirmationText = 'Are you sure you want to import ' . $companiesCount . ' leads from ' . $competitor->name . ' into HubSpot?';
+        @endphp
+        <x-import-buttons :confirmationText="$confirmationText"></x-import-buttons>
     </form>
     <x-pagination :pages="$companies"></x-pagination-button>
 

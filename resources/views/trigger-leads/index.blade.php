@@ -2,7 +2,7 @@
     $yearParam = request('year') ?? '2024';
 @endphp
 
-<x-layouts.header currentPage="{{ $currentPage }}" link="triggerLeads">
+<x-layouts.header currentPage="Trigger Leads" link="triggerLeads">
     <ul class="list-none flex space-x-2 default:ring-0">
         @foreach ($years as $year)
             <li>

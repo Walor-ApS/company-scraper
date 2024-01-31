@@ -1,7 +1,8 @@
 <x-layouts.header currentPage="B Corporations" link="bcorporations" extension="{{ $country }}">
+    <x-searchbar placeholder="B Corporation"></x-searchbar>
     <h1 class="text-2xl font-bold">B Corporations</h1>
 
-    <form action="{{ url('bcorporations/update') }}" method="post">
+    <form action="{{ url("bcorporations/$country/update") }}" method="post">
         @csrf
         @method('put')
 
@@ -29,8 +30,10 @@
             @endforelse
         </table>
 
-        <button type="submit" class="mt-4 bg-blueOpacity p-2 px-8 rounded-full hover:opacity-75 transition-opacity">
-            Import B Corporations</button>
+        @php
+            $confirmationText = 'Are you sure you want to import ' . $bcorporationsCount . ' leads from ' . $country . ' into HubSpot?';
+        @endphp
+        <x-import-buttons :confirmationText="$confirmationText"></x-import-buttons>
     </form>
     <x-pagination :pages="$bcorporations"></x-pagination-button>
 

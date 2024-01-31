@@ -1,18 +1,17 @@
 <x-layouts.header currentPage="Competitors" link="competitors">
-    {{-- Search field --}}
-    <form action="{{ url('competitors/import') }}" method="POST" enctype="multipart/form-data" class="mb-4 flex flex-col">
-        @csrf
-        <input type="file" name="file" accept=".csv" class="text-slate-500 cursor-pointer" />
+    <x-file-form></x-file-form>
 
-        <button type="submit" class="w-fit mt-4 bg-slate-200 px-4 py-1 rounded-md">Upload</button>
-    </form>
+    <section class="grid xl:grid-cols-3 gap-8 lg:grid-cols-2 md:grid-cols-1 pt-4">
+        @forelse ($competitors as $competitorId => $companies)
+            @php
+                $competitor = \App\Models\Competitor::find($competitorId);
+            @endphp
 
-    <section class="grid xl:grid-cols-3 gap-8 lg:grid-cols-2 md:grid-cols-1">
-        @forelse ($competitors as $competitor => $companies)
-            <a class="bg-white p-8 rounded-md cursor-pointer hover:shadow-md transition-shadow"
-                href="/competitors/{{ $competitor }}">
-                <p class="text-center text-xl">{{ $competitor }}</p>
-                <p class="text-center text-xl pt-1 font-bold">{{ count($companies) }}</p>
+            <a class="bg-white p-6 rounded-md cursor-pointer hover:shadow-md transition-shadow flex flex-col gap-y-1"
+                href="/competitors/{{ $competitor->id }}">
+                <p class="text-center text-2xl">{{ $competitor->name }}</p>
+                <p class="text-center text-md text-slate-400">{{ $competitor->cvr_name }}</p>
+                <p class="text-center text-lg font-bold">{{ count($companies) }}</p>
             </a>
         @empty
             <p class="text-xs text-darkGray">There are no trigger leads for this request</p>
