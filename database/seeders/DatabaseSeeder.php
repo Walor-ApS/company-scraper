@@ -12,17 +12,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call(MunicipalitySeeder::class);
-        // $this->command->info('Municipalities seeded');
+        $this->call(MunicipalitySeeder::class);
+        $this->command->info('Municipalities seeded');
 
-        // $this->call(CompanySeeder::class);
-        // $this->command->info('Companies seeded');
+        $this->call(CompanySeeder::class);
+        $this->command->info('Companies seeded');
 
-        // $this->call(CompanyEmployeeSeeder::class);
-        // $this->command->info('Company employees seeded');
+        $this->call(CompanyEmployeeSeeder::class);
+        $this->command->info('Company employees seeded');
 
-        // $this->call(TriggerLeadSeeder::class);
-        // $this->command->info('Trigger leads seeded');
+        $this->call(TriggerLeadSeeder::class);
+        $this->command->info('Trigger leads seeded');
 
         $this->call(BCorporationSeeder::class);
         $this->command->info('BCorporations seeded');
