@@ -7,9 +7,8 @@
         onclick="toggleModal()">
         Import All Competitors</button>
 
-    <x-modal>
+    <x-modal title="Are you sure?">
         <div class="flex flex-col gap-y-2">
-            <h1 class="text-xl font-bold text-center">Are you sure?</h1>
             <p class="text-slate-500">{{ $confirmationText }}</p>
         </div>
         <div class="grid grid-cols-2 gap-x-4">

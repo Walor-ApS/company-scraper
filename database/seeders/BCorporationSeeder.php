@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Data\BCorporationData;
 use App\Models\BCorporation;
+use App\Data\BCorporationData;
 use Illuminate\Database\Seeder;
 
 class BCorporationSeeder extends Seeder

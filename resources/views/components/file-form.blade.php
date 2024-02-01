@@ -9,8 +9,7 @@
     <button type="button" id="uploadButton" onclick="toggleModal()"
         class="w-fit bg-slate-200 px-4 py-1 rounded-md ml-4 transition-opacity hover:opacity-75 h-fit hidden">Upload</button>
 
-    <x-modal>
-        <h1 class="text-2xl">Name your competitor</h1>
+    <x-modal title="Name your competitor">
         <input type="text" name="competitor_name" placeholder="Walor.io" class="border-b border-b-blue outline-none">
         <button type="submit"
             class="bg-blueOpacity text-blue rounded-xl py-1 px-5 transition-opacity hover:opacity-75">Submit</button>

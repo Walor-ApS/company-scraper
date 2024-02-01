@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BCorporation;
 use App\Models\Company;
 use App\Models\Municipality;
 use App\Models\CompanyEmployee;
@@ -37,6 +38,13 @@ class DataController extends Controller
     {
         return response()->json(
             TriggerLead::all(),
+        );
+    }      
+
+    public function bcorporations(): JsonResponse
+    {
+        return response()->json(
+            BCorporation::all(),
         );
     }       
 }
