@@ -26,8 +26,6 @@ class BCorporationsViewController extends Controller
     public function show(String $country, Request $request) {
         $bcorporations = BCorporation::where('country', $country);
 
-        return $bcorporations->get();
-
         if ($request->search) {
             $bcorporations->where("name", "LIKE", "%$request->search%");
         }
