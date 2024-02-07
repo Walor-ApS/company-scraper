@@ -9,7 +9,7 @@
         <table class="w-full mt-4 text-left table-auto">
             <tr>
                 <th class="table-head pl-3">Name</th>
-                <th class="table-head">Founded at</th>
+                <th class="table-head">Employees</th>
                 <th class="table-head">Website</th>
                 <th class="table-head">State</th>
                 <th class="table-head"></th>
@@ -18,8 +18,8 @@
 
             @forelse ($bcorporations as $bcorporation)
                 <tr>
-                    <x-company-table-row :company="$bcorporation" :link="$bcorporation->link">
-                        <td class="bg-white w-1/6">{{ $bcorporation->founded_at }}</td>
+                    <x-company-table-row :company="$bcorporation" :link="$bcorporation->website">
+                        <td class="bg-white w-1/6">{{ $bcorporation->employees }}</td>
                     </x-company-table-row>
                 </tr>
                 <tr class="h-1"></tr>

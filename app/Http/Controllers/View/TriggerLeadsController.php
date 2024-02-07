@@ -48,8 +48,13 @@ class TriggerLeadsController extends Controller
 
         $companies = Company::whereIn('id', $companyIds)->get();
 
+        $externalProperties = [
+            "source_of_origin" => "Trigger Leads",
+            "numberofemployees" => $employees,
+            "country" => $country
+        ];
         
-        (new UpdateCompanyService())->setup($request, $companies);
+        (new UpdateCompanyService())->setup($request, $companies, $externalProperties);
         
         return redirect()->back()->withInput(['refresh' => true]);
     }

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('bcorporations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->longText('description');
             $table->string('website');
             $table->string('country');
+            $table->string('employees');
             $table->string('founded_at')->nullable();
             $table->string('state')->default('New');
             

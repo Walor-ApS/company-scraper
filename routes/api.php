@@ -18,5 +18,5 @@ Route::prefix('data')->group(function () {
 });
 
 Route::prefix('bcorporations')->group(function () {
-    Route::get('companies', [BCorporationController::class, 'index']);
+    Route::get('companies', [BCorporationController::class, 'index']); //Call this endpoint to retrieve all B Corporations (You can't close down your computer)
 });

@@ -10,5 +10,5 @@ class BCorporation extends Model
     use HasFactory;
 
     protected $table = 'bcorporations';
-    protected $fillable = ['country', 'founded_at', 'name', 'description', 'website', 'state'];
+    protected $fillable = ['country', 'founded_at', 'name', 'employees', 'website', 'state'];
 }

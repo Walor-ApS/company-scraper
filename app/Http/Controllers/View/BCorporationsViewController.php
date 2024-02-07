@@ -39,7 +39,13 @@ class BCorporationsViewController extends Controller
 
     public function update(String $country, Request $request) {
         $bcorporations = BCorporation::where('country', $country)->get();
-        (new UpdateCompanyService())->setup($request, $bcorporations);
+
+        $externalProperties = [
+            "source_of_origin" => "B-Corp",
+            "country" => $country
+        ];
+
+        (new UpdateCompanyService())->setup($request, $bcorporations, $externalProperties);
         
         return redirect()->back()->withInput(['refresh' => true]);
     }

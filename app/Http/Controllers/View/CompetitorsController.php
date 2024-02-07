@@ -12,7 +12,7 @@ use App\Services\UpdateCompanyService;
 class CompetitorsController extends Controller
 {
     public function index() {
-        $competitors = CompetitorCompany::all()->groupBy('competitor_id');
+        $competitors = CompetitorCompany::all()->groupBy('competitor_id')->reverse();
 
         return view('competitors.index', [
             "competitors" => $competitors,
@@ -58,7 +58,12 @@ class CompetitorsController extends Controller
     public function update(Competitor $competitor, Request $request) {
         $companies = CompetitorCompany::where("competitor_id", $competitor->id)->get();
 
-        (new UpdateCompanyService())->setup($request, $companies);        
+        $externalProperties = [
+            "source_of_origin" => "Competitors",
+            "wb_solution" => $competitor->name       
+        ];
+
+        (new UpdateCompanyService())->setup($request, $companies, $externalProperties);        
         
         return redirect()->back()->withInput(['refresh' => true]);
     }

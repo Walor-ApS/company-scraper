@@ -13,8 +13,10 @@ class ImportCompanyToHubSpot {
         'properties' => $properties
     ]);
 
-    $company->update([
-      "state" => "Imported"
-    ]);
+    if ($response->status() == 201) {
+      $company->update([
+        "state" => "Imported"
+      ]);
+    }
   }
 }

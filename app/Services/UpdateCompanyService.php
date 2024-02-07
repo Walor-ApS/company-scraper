@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class UpdateCompanyService {
   public $companies;
+  public $externalProperties;
 
-  public function setup(Request $request, Collection $companies) {
+  public function setup(Request $request, Collection $companies, Array $externalProperties) {
     $this->companies = $companies;
+    $this->externalProperties = $externalProperties;
 
     //Update website
     $websites = $request->input('websites', []);
@@ -39,22 +41,27 @@ class UpdateCompanyService {
     foreach ($selectedCompanies as $key => $companyId) {
       $company = $this->companies->find($companyId);
       
-      $properties = [
+      $companyProperties = [
           "country" => $company->country ?? null,
           "phone" => $company->phone ?? null,
           "domain" => $company->website ?? null
       ];
+
+      $properties = array_merge($companyProperties, $this->externalProperties);
+
       (new ImportCompanyToHubSpot())->excecute($company, $properties);
     }
   }
 
   public function importAllCompanies() {
     foreach ($this->companies as $company) {
-      $properties = [
+      $companyProperties = [
           "country" => $company->country ?? null,
           "phone" => $company->phone ?? null,
           "domain" => $company->website ?? null
       ];
+
+      $properties = array_merge($companyProperties, $this->externalProperties);
       
       (new ImportCompanyToHubSpot())->excecute($company, $properties);
     }
