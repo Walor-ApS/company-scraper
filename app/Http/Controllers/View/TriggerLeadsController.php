@@ -5,17 +5,16 @@ namespace App\Http\Controllers\View;
 use App\Models\Company;
 use App\Models\TriggerLead;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Services\UpdateCompanyService;
 
 class TriggerLeadsController extends Controller
 {
     public function index() {
         $triggerLeads = TriggerLead::all()->sortBy(['employees', 'created_at'])->groupBy(['year', 'employees', 'month', 'country']);        
         $years = TriggerLead::select('year')->distinct()->orderBy('year')->get()->pluck('year');
-        
-        return view('trigger-leads/index')->with([
-            "currentPage" => "Trigger Leads", 
+
+        return view('trigger-leads/index')->with([            
             "years" => $years, 
             "triggerLeads" => $triggerLeads
         ]);
@@ -35,18 +34,27 @@ class TriggerLeadsController extends Controller
         }
 
         return view('trigger-leads/show')->with([
-            "currentPage" => "Trigger Leads",
             "month" => $month,
             "triggerLeads" => $triggerLeads
         ]);
     }
 
-    public function remove(Request $request) {
-        $selectedCompanies = $request->input('selected_companies', []);
-        foreach ($selectedCompanies as $key => $companyId) {
-            $company = Company::find($companyId);
-            $company->delete();
+    public function update(String $employees, String $year, String $month, String $country, Request $request) {
+        $triggerLeads = TriggerLead::where(['year' => $year, 'month' => $month, 'employees' => $employees]);
+        if ($country != "all") {
+            $triggerLeads->where("country", $country);
         }
+        $companyIds = $triggerLeads->get()->pluck('company_id');
+
+        $companies = Company::whereIn('id', $companyIds)->get();
+
+        $externalProperties = [
+            "source_of_origin" => "Trigger Leads",
+            "numberofemployees" => $employees,
+            "country" => $country
+        ];
+        
+        (new UpdateCompanyService())->setup($request, $companies, $externalProperties);
         
         return redirect()->back()->withInput(['refresh' => true]);
     }

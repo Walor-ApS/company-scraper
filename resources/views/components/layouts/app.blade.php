@@ -12,6 +12,13 @@
     {{ $slot }}
 
     @stack('scripts')
+
+    <script>
+        function toggleModal(id) {
+            var modal = document.getElementById(id ?? "modal");
+            modal.classList.toggle('hidden');
+        }
+    </script>
 </body>
 
 </html>

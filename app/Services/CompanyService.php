@@ -46,7 +46,7 @@ class CompanyService {
       $link_href = $node->filter('div div h2 a')->attr('href');
       $website = $this->browser->request('GET', "$this->site$link_href");
 
-      (new ScrapeCompanyService())->setup($website, $this->country);
+      (new ScrapeCompanyService())->setup($website, $this->country);      
     });
   }
 }

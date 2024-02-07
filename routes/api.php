@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\CompaniesController;
-use App\Http\Controllers\DataController;
+use App\Http\Controllers\BCorporationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DataController;
+use App\Http\Controllers\CompaniesController;
 
 Route::get('companies', [CompaniesController::class, 'fetchCompanies']);
 Route::get('employees', [CompaniesController::class, 'fetchEmployees']);
@@ -13,4 +14,9 @@ Route::prefix('data')->group(function () {
     Route::get('employees', [DataController::class, 'employees']);
     Route::get('municipalities', [DataController::class, 'municipalities']);
     Route::get('triggerLeads', [DataController::class, 'triggerLeads']);
+    Route::get('bcorporations', [DataController::class, 'bcorporations']);
+});
+
+Route::prefix('bcorporations')->group(function () {
+    Route::get('companies', [BCorporationController::class, 'index']); //Call this endpoint to retrieve all B Corporations (You can't close down your computer)
 });

@@ -14,7 +14,7 @@ class EmployeeCheckAction {
     
     if (! $newCompany || ! $oldCompany) {
       return;
-    };    
+    };
     
     if (
       $newCompany->employees > 50 && $oldCompany->employees < 50 
@@ -49,7 +49,7 @@ class EmployeeCheckAction {
         'employees' => $newCompanyEmployees,
         'country' => $company->country,
         'year' => $company->created_at->format('Y'),
-        'month' => $company->created_at->format('F'),
+        'month' => $company->created_at->format('F')
       ]);
     }
   }

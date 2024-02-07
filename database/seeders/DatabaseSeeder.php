@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Data\TriggerLeadCompanyData;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,5 +20,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CompanyEmployeeSeeder::class);
         $this->command->info('Company employees seeded');
+
+        $this->call(TriggerLeadSeeder::class);
+        $this->command->info('Trigger leads seeded');
+
+        $this->call(BCorporationSeeder::class);
+        $this->command->info('BCorporations seeded');
     }
 }
