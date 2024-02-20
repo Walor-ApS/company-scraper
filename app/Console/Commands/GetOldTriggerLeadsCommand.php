@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Company;
+use App\Models\TriggerLead;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 
 class GetOldTriggerLeadsCommand extends Command
 {
@@ -13,10 +15,24 @@ class GetOldTriggerLeadsCommand extends Command
     {
         $companies = $this->getCompanies();
 
-        logger($companies);
+       foreach($companies as $company) {
+           $newCompanyEmployees = $company
+               ->employeeHistory()
+               ->where("employees", ">", "49")
+               ->first()
+               ->employees;
+
+           TriggerLead::create([
+               'company_id' => $company->id,
+               'employees' => $newCompanyEmployees,
+               'country' => $company->country,
+               'year' => $company->created_at->format('Y'),
+               'month' => $company->created_at->format('F')
+           ]);
+       }
     }
 
-    private function getCompanies(): array
+    private function getCompanies(): Collection
     {
         $companies = Company::select(["id"])
             ->with("employeeHistory")
@@ -40,6 +56,6 @@ class GetOldTriggerLeadsCommand extends Command
             }
         }
 
-        return $matchingCompanies;
+        return Company::whereIn('id', $matchingCompanies)->get();
     }
 }
