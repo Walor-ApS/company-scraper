@@ -13,6 +13,9 @@ class CompanyEmployeeSeeder extends Seeder
      */
     public function run(): void
     {
-       CompanyEmployee::insert(CompanyEmployeeData::COMPANIES_EMPLOYEES);
+        foreach(CompanyEmployeeData::COMPANIES_EMPLOYEES as $companyEmployees) {
+            CompanyEmployee::create([...$companyEmployees, 'updated_at' => now(), 'created_at' => now()]);
+        }
+//       CompanyEmployee::insert();
     }
 }

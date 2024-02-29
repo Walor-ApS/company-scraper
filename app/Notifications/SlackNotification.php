@@ -17,12 +17,12 @@ class SlackNotification extends Notification
         $this->message = $message;
     }
 
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['slack'];
     }
 
-    public function toSlack($notifiable)
+    public function toSlack($notifiable): SlackMessage
     {
         return (new SlackMessage)
             ->content($this->message);

@@ -13,7 +13,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/slack-notification-channel": "^3.1",
+        "laravel/slack-notification-channel": "3.0",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
         "react/promise": "^3.1",
@@ -36,7 +36,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/EmployeeHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

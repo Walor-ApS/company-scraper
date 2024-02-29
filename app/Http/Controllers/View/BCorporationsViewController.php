@@ -19,7 +19,7 @@ class BCorporationsViewController extends Controller
         }
 
         return view('bcorporations/index')->with([
-            'bcorporations' => $bcorporations            
+            'bcorporations' => $bcorporations
         ]);
     }
 
@@ -29,7 +29,7 @@ class BCorporationsViewController extends Controller
         if ($request->search) {
             $bcorporations->where("name", "LIKE", "%$request->search%");
         }
-        
+
         return view('bcorporations/show')->with([
             'bcorporationsCount' => count($bcorporations->get()),
             'bcorporations' => $bcorporations->paginate(24),
@@ -46,7 +46,7 @@ class BCorporationsViewController extends Controller
         ];
 
         (new UpdateCompanyService())->setup($request, $bcorporations, $externalProperties);
-        
+
         return redirect()->back()->withInput(['refresh' => true]);
     }
 }

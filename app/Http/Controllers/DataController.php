@@ -23,7 +23,7 @@ class DataController extends Controller
     public function employees(): JsonResponse
     {
         return response()->json(
-            CompanyEmployee::take(5)->get(),
+            CompanyEmployee::all(),
         );
     }
 
