@@ -11,16 +11,16 @@ use Illuminate\Database\Eloquent\Collection;
 class GetOldTriggerLeadsCommand extends Command
 {
     protected $signature = 'trigger-leads:get-old';
-    public $targetEmployees = 250;
+    public $targetEmployees = 49;
 
     public function handle(): void
     {
-        $companies = $this->getCompanies();        
+        $companies = $this->getCompanies();
 
         foreach($companies as $company) {
             //Find the excact time where a company extended the target employees
             $companyTriggerPoint = $company->employeeHistory->reverse()->firstWhere('employees', '>=', $this->targetEmployees);
-            
+
             TriggerLead::create([
                 'company_id' => $company->id,
                 'employees' => "$this->targetEmployees",
@@ -29,7 +29,7 @@ class GetOldTriggerLeadsCommand extends Command
                 'month' => $companyTriggerPoint->month
             ]);
         }
-    }   
+    }
 
     private function getCompanies(): Collection
     {
@@ -39,7 +39,7 @@ class GetOldTriggerLeadsCommand extends Command
 
         $matchingCompanies = [];
 
-        foreach ($companies as $company) {            
+        foreach ($companies as $company) {
             $hasBelow = $company
                 ->employeeHistory()
                 ->where("employees", "<", "$this->targetEmployees")
