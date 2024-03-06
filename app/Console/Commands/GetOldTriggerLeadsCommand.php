@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 class GetOldTriggerLeadsCommand extends Command
 {
     protected $signature = 'trigger-leads:get-old';
-    public $targetEmployees = 49;
+    public $targetEmployees = 250;
 
     public function handle(): void
     {
