@@ -4,6 +4,8 @@ use App\Http\Controllers\BCorporationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\CompaniesController;
+use App\Http\Controllers\oldLeadsController;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('companies', [CompaniesController::class, 'fetchCompanies']);
 Route::get('employees', [CompaniesController::class, 'fetchEmployees']);

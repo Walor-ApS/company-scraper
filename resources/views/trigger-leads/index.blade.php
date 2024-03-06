@@ -21,7 +21,7 @@
             @forelse ($employeesData as $month => $monthData)
                 <a class="bg-white p-8 rounded-md cursor-pointer hover:shadow-md transition-shadow"
                     href="/triggerLeads/{{ $employees }}/{{ $yearParam }}/{{ $month }}">
-                    <p class="text-center text-xl font-bold">{{ $month }}</p>
+                    <p class="text-center text-xl font-bold">{{ date("F", mktime(0, 0, 0, $month, 1)) }}</p>
                     <div class="grid grid-cols-4 pt-5">
                         {{-- Denmark --}}
                         <div class="flex flex-col items-center justify-center space-y-2">

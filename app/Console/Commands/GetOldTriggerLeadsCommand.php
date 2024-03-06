@@ -11,57 +11,50 @@ use Illuminate\Database\Eloquent\Collection;
 class GetOldTriggerLeadsCommand extends Command
 {
     protected $signature = 'trigger-leads:get-old';
+    public $targetEmployees = 49;
 
     public function handle(): void
     {
         $companies = $this->getCompanies();
 
-       foreach($companies as $company) {
-           (new EmployeeCheckAction())->excecute($company);
-//           $newCompanyEmployees = $company
-//               ->employeeHistory()
-//               ->where("employees", ">", "49")
-//               ->first()
-//               ->employees;
-//
-//           $newCompanyEmployeesCount = $newCompanyEmployees !== null ? $this->employeeRoundDown($company->employees) : $this->employeeRangeRoundDown($company->employees_range);
-//
-//
-//           TriggerLead::create([
-//               'company_id' => $company->id,
-//               'employees' => $newCompanyEmployeesCount,
-//               'country' => $company->country,
-//               'year' => $company->created_at->format('Y'),
-//               'month' => $company->created_at->format('F')
-//           ]);
-       }
+        foreach($companies as $company) {
+            //Find the excact time where a company extended the target employees
+            $companyTriggerPoint = $company->employeeHistory->reverse()->firstWhere('employees', '>=', $this->targetEmployees);
+
+            TriggerLead::create([
+                'company_id' => $company->id,
+                'employees' => "$this->targetEmployees",
+                'country' => $company->country,
+                'year' => $companyTriggerPoint->year,
+                'month' => $companyTriggerPoint->month
+            ]);
+        }
     }
 
     private function getCompanies(): Collection
     {
-        return Company::all();
-//        $companies = Company::select(["id"])
-//            ->with("employeeHistory")
-//            ->get();
-//
-//        $matchingCompanies = [];
-//
-//        foreach ($companies as $company) {
-//            $hasBelow = $company
-//                ->employeeHistory()
-//                ->where("employees", "<", "50")
-//                ->exists();
-//
-//            $hasAbove = $company
-//                ->employeeHistory()
-//                ->where("employees", ">", "49")
-//                ->exists();
-//
-//            if ($hasBelow && $hasAbove) {
-//                $matchingCompanies[] = $company->id;
-//            }
-//        }
-//
-//        return Company::whereIn('id', $matchingCompanies)->get();
+        $companies = Company::select(["id"])
+            ->with("employeeHistory")
+            ->get();
+
+        $matchingCompanies = [];
+
+        foreach ($companies as $company) {
+            $hasBelow = $company
+                ->employeeHistory()
+                ->where("employees", "<", "$this->targetEmployees")
+                ->exists();
+
+            $hasAbove = $company
+                ->employeeHistory()
+                ->where("employees", ">=", "$this->targetEmployees")
+                ->exists();
+
+            if ($hasBelow && $hasAbove) {
+                $matchingCompanies[] = $company->id;
+            }
+        }
+
+        return Company::whereIn('id', $matchingCompanies)->get();
     }
 }

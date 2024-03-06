@@ -3,8 +3,9 @@
 namespace App\Actions;
 
 use App\Models\Company;
-use App\Models\SlackChannel;
 use App\Models\TriggerLead;
+use App\Models\SlackChannel;
+use App\Helpers\EmployeeHelper;
 
 class EmployeeCheckAction {
   public function excecute(Company $company): void {
@@ -43,32 +44,16 @@ class EmployeeCheckAction {
 //      \nLearn more about the company here: $link
 //      ");
 
-      $newCompanyEmployees = $newCompany->employees !== null ? $this->employeeRoundDown($newCompany->employees) : $this->employeeRangeRoundDown($newCompany->employees_range);
+      $newCompanyEmployees = $newCompany->employees !== null ? EmployeeHelper::employeeRoundDown($newCompany->employees) : EmployeeHelper::employeeRangeRoundDown($newCompany->employees_range);
       TriggerLead::create([
         'company_id' => $company->id,
         'employees' => $newCompanyEmployees,
         'country' => $company->country,
-        'year' => $company->created_at->format('Y'),
-        'month' => $company->created_at->format('F')
+        'year' => $newCompany->year,
+        'month' => $newCompany->month
       ]);
     }
-  }
-
-  function employeeRoundDown($number) {
-    if ($number <= 250) {
-        return floor($number / 50) * 50;
-    } else {
-        return floor($number / 250) * 250;
-    }
-  }
-
-  function employeeRangeRoundDown($range) {
-    if ($range == "50 - 99") {
-        return 50;
-    } else {
-        return 250;
-    }
-  }
+  }  
 
   public function checkVariable($var): String {
     if ($var == null) {
