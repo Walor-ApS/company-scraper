@@ -31,4 +31,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'hubspot' => [
+        'api_key' => env('HUB_SPOT_ACCESS_TOKEN'),
+    ],
 ];
