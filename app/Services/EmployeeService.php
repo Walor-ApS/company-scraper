@@ -49,7 +49,7 @@ class EmployeeService {
         'year' => Carbon::now()->year,
         'month' => Carbon::now()->month,
         'week' => Carbon::now()->weekNumberInMonth,
-        'employees' => $this->company->employees,
+        'employees' => $this->company->employees(),
         'employees_range' => $this->company->employees_range
       ]);
 
