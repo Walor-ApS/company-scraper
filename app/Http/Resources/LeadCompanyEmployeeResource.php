@@ -25,6 +25,10 @@ class LeadCompanyEmployeeResource extends JsonResource
             'name' => $this->company->name,
             'employees' => $this->employees,
             'website' => $website,
+            'phone' => $this->company->phone,
+            'address' => $this->company->address,
+            'country' => $this->company->country,
+            'email' => $this->company->email,
         ];
     }
 }
