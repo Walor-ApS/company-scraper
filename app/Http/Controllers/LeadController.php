@@ -12,9 +12,9 @@ class LeadController extends Controller
     {
         $country = $request->get('country');
 
-        $employeesTest = CompanyEmployee::select('company_id', 'employee_count')
+        $employeesTest = CompanyEmployee::select('company_id', 'employees')
             ->groupBy('company_id')
-            ->havingRaw('COUNT(DISTINCT employee_count) > 1')
+            ->havingRaw('COUNT(DISTINCT employees) > 1')
             ->pluck('company_id');
 
         $employees = CompanyEmployee::whereIn('company_id', $employeesTest)
