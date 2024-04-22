@@ -17,9 +17,11 @@ class LeadController extends Controller
             ->havingRaw('COUNT(*) = 1')
             ->pluck('id');
 
+
+
         $employees = CompanyEmployee::whereIn('company_id', $employeesTest)
             ->take(50)
-            ->where('employees', '>', 50)
+            ->where('employees', '<', 50)
             ->whereHas('company', function($q) use($country){
                 $q->where('country', $country);
             })
