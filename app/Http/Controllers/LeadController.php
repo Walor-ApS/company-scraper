@@ -13,8 +13,8 @@ class LeadController extends Controller
         $country = $request->get('country');
 
         $employees = CompanyEmployee::take(50)
-            ->where('employees', '<', 50)
-            ->where('employees', '>', 80)
+            ->where('employees', '>', 50)
+            ->where('employees', '<', 80)
             ->whereHas('company', function($q) use($country){
                 $q->where('country', $country);
             })
