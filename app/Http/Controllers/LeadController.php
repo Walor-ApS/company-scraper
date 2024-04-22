@@ -11,7 +11,7 @@ class LeadController extends Controller
     {
         $country = $request->get('country');
 
-        CompanyEmployee::take(100)
+        $employees = CompanyEmployee::take(100)
             ->where('employees', '<', 50)
             ->where('employees', '>', 45)
             ->whereHas('company', function($q) use($country){
@@ -21,6 +21,6 @@ class LeadController extends Controller
             ->latest()
             ->get();
 
-
+        return response()->json($employees);
     }
 }
