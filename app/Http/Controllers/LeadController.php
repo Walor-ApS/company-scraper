@@ -14,7 +14,8 @@ class LeadController extends Controller
 
         $employeesTest = CompanyEmployee::select('company_id', 'employees')
             ->groupBy('company_id')
-            ->havingRaw('COUNT(DISTINCT employees) > 1')
+            ->selectRaw('COUNT(DISTINCT employees) as unique_counts')
+            ->having('unique_counts', '>', 1)
             ->pluck('company_id');
 
         $employees = CompanyEmployee::whereIn('company_id', $employeesTest)
