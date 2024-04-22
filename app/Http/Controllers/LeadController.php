@@ -15,10 +15,8 @@ class LeadController extends Controller
 
         $employeesTest = CompanyEmployee::with('company')->groupBy(['employees', 'company_id'])
             ->havingRaw('COUNT(*) = 1')
-            ->get();
-
-        return $employeesTest;
-
+            ->pluck('id');
+        
         $employees = CompanyEmployee::whereIn('company_id', $employeesTest)
             ->take(50)
             ->where('employees', '<', 50)
