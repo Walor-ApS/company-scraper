@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\LeadCompanyEmployeeResource;
 use App\Models\CompanyEmployee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LeadController extends Controller
 {
@@ -12,11 +13,12 @@ class LeadController extends Controller
     {
         $country = $request->get('country');
 
-        $employeesTest = CompanyEmployee::select('company_id', 'employees')
-            ->groupBy('company_id')
-            ->selectRaw('COUNT(DISTINCT employees) as unique_counts')
-            ->having('unique_counts', '>', 1)
-            ->pluck('company_id');
+        $employeesTest = CompanyEmployee::select(['id', 'employees', 'company_id'])
+            ->groupBy('employees', 'company_id')
+            ->havingRaw('COUNT(*) = 1')
+            ->get();
+
+        return $employeesTest;
 
         $employees = CompanyEmployee::whereIn('company_id', $employeesTest)
             ->take(50)
