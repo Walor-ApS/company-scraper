@@ -27,6 +27,7 @@ class LeadController extends Controller
                 $q->where('country', $country);
             })
             ->with('company')
+            ->distinct('company_id')
             ->latest()
             ->get();
 
