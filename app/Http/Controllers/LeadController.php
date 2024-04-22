@@ -12,9 +12,15 @@ class LeadController extends Controller
     {
         $country = $request->get('country');
 
-        $employees = CompanyEmployee::take(50)
-            ->where('employees', '>', 50)
-            ->where('employees', '<', 80)
+        $employeesTest = CompanyEmployee::select('company_id', 'employee_count')
+            ->groupBy('company_id')
+            ->havingRaw('COUNT(DISTINCT employee_count) > 1')
+            ->pluck('company_id');
+
+        $employees = CompanyEmployee::whereIn('company_id', $employeesTest)
+            ->take(50)
+            ->where('employees', '<', 50)
+            ->where('employees', '>', 44)
             ->whereHas('company', function($q) use($country){
                 $q->where('country', $country);
             })
