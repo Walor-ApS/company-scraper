@@ -14,7 +14,7 @@ class LeadController extends Controller
 
         $employees = CompanyEmployee::take(50)
             ->where('employees', '<', 50)
-            ->where('employees', '>', 45)
+            ->where('employees', '>', 80)
             ->whereHas('company', function($q) use($country){
                 $q->where('country', $country);
             })
