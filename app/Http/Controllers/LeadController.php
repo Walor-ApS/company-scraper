@@ -27,9 +27,9 @@ class LeadController extends Controller
                 $q->where('country', $country);
             })
             ->with('company')
-            ->unique('company_id')
             ->latest()
-            ->get();
+            ->get()
+            ->unique('company_id');
 
         return LeadCompanyEmployeeResource::collection($employees);
     }
