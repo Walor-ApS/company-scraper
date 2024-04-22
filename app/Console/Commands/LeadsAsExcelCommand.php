@@ -6,23 +6,9 @@ use Illuminate\Console\Command;
 
 class LeadsAsExcelCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:leads-as-excel-command';
+    protected $signature = 'leads:excel';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         //

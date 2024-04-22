@@ -11,6 +11,8 @@ Route::get('companies', [CompaniesController::class, 'fetchCompanies']);
 Route::get('employees', [CompaniesController::class, 'fetchEmployees']);
 Route::get('companies/{company}/employees', [CompaniesController::class, 'fetchEmployeeHistoryForCompany']);
 
+Route::get('leads', \App\Http\Controllers\LeadController::class);
+
 Route::prefix('data')->group(function () {
     Route::get('companies', [DataController::class, 'companies']);
     Route::get('employees', [DataController::class, 'employees']);
