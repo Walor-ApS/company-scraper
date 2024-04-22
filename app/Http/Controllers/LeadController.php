@@ -13,7 +13,7 @@ class LeadController extends Controller
     {
         $country = $request->get('country');
 
-        $employeesTest = CompanyEmployee::select(['id', 'employees', 'company_id'])
+        $employeesTest = CompanyEmployee::select('id', 'employees', 'company_id')
             ->groupBy(['employees', 'company_id'])
             ->havingRaw('COUNT(*) = 1')
             ->get();
