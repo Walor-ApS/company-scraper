@@ -6,7 +6,7 @@ use App\Actions\TranslateIconNames;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LeadCompanyEmployeeTransformer extends JsonResource
+class LeadCompanyEmployeeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LeadCompanyEmployeeResource;
 use App\Models\CompanyEmployee;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,6 @@ class LeadController extends Controller
             ->latest()
             ->get();
 
-        return response()->json($employees);
+        return LeadCompanyEmployeeResource::collection($employees);
     }
 }
